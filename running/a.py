@@ -1,9 +1,9 @@
 import sys
 import os
 
-inp = [ 2 , 4, 6, 8]
-outp  = [ 4 , 8, 12 , 16]
 
+inp = [3, 5 ,4]
+outp = [ 6, 10]
 
 
 #Om Sri
