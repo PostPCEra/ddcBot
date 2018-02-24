@@ -97,7 +97,7 @@ class RunPyCode(object):
         filename = "./running/a.py"
         if not code:
             code = self.code
-        botcode = open('./running/om_codebot.py', 'r').read()
+        botcode = open('./running/bot_algo.py', 'r').read()
         with open(filename, "w") as f:
             f.write(code)
             f.write(botcode)
