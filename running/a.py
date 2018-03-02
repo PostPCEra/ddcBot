@@ -1,9 +1,10 @@
 import sys
 import os
 
+asr = [ 1, 3, 4]
+gitu = [ 2, 4, 5]
 
-inp = [3, 5 ,4]
-outp = [ 6, 10]
+# @input = asr ; @output = gitu
 
 
 #Om Sri
@@ -45,19 +46,10 @@ def find_relationship( inp, outp):
 # ****** ------- construct & return function CODE
 def get_fn_code(inp, outp, var1, op1, op2):
     
-    str = "\ndef relation(lst, output):\n\t" \
-    "out = [ ]\n\t" \
-    "{} = int(output[0] {} lst[0])\n\t" \
-    "for x in lst:\n\t\t" \
-    "out.append({} {} x)\n\n\t" \
-    "return out"
-    code = str.format(var1, op1, var1, op2)
-    
-    str = "\n\n##******-- MAIN program:\n" \
-    "inp = {}\n" \
-    "outp = {}\n" \
-    "print( relation(inp, outp) )\n"
-    code = code + str.format(inp, outp)
+    code = "{} = [ ]\n".format(outp) + \
+    "{} = {} \n".format(var1, 2) + \
+    "for x in {}:\n\t".format(inp)  + \
+    "{}.append({} {} x)\n\n\t".format(outp, var1, op2)
     
     #print(code)
     return code
@@ -66,13 +58,15 @@ def get_fn_code(inp, outp, var1, op1, op2):
 # ****** ------- 
 # pass parms as argv * * so you can have any number with out naming.
 def main_entry_point(in1, out1):
-    rel = find_relationship(in1, out1)
+    in1_val = eval(in1)
+    out1_val = eval(out1)
+    rel = find_relationship(in1_val, out1_val)   # pass values of variable
     #print("\nrelatinship code is: ",rel)
     
     if rel < 3:
         params = call_order[rel]
         var1, op1, op2 = params  # unpack 
-        code = get_fn_code(in1, out1, var1, op1, op2)
+        code = get_fn_code(in1, out1, var1, op1, op2)  # pass string name of the input/output variables not names
         
         
     else:
@@ -98,7 +92,8 @@ call_order = [
  ]
 
 # ****** -------  calling Main()
-
+'''
+# un comment this for local testing
 in1 = [1, 2, 4, 8]
 out1 = [2, 4, 8, 16]
 
@@ -106,10 +101,10 @@ inp2 = [1, 2, 6, 7]
 outp2 = [3, 4, 8, 9]
 
 #main_entry_point(in1, out1)
-main_entry_point(inp, outp)
+'''
 
-#st = open('pdb_next.py', 'r').read()
-#print(st)
+#main_entry_point(inp, outp)
+
  
 
 # ****** -------  
@@ -125,3 +120,5 @@ def find_type(item):
   else :
       print("not list type")
 """
+
+main_entry_point('asr' , 'gitu')

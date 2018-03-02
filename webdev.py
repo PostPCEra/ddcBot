@@ -25,8 +25,10 @@ int main(int argc, char **argv)
 default_py_code = """import sys
 import os
 
-if __name__ == "__main__":
-    print "Hello Python World!!"
+a = [ 1, 3, 4]
+b = [ 2, 6, 8]
+
+# @input = a ; @output = b
 """
 
 default_rows = "15"
