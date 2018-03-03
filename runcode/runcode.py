@@ -32,19 +32,22 @@ class RunPyCode(object):
         code_str = "main_entry_point('{}' , '{}')".format(input_var.strip(), output_var.strip())
         return code_str
 
-    def run_py_code(self, code=None):
+    def run_py_code(self, submit_type, code=None):
         filename = "./running/a.py"
         if not code:
             code = self.code
-        botcode = open('./running/bot_algo.py', 'r').read()
+
         with open(filename, "w") as f:
             f.write(code)  # user entered coded from the editor
-            f.write(botcode)  # and ADD botcode that is is our alog code from bot_algo.py file
 
-            code_lines = code.split("\n")
-            main_call_code = self.extract_input_output_names(code_lines)
-            f.write(main_call_code)
-            f.write("\n")
+            if submit_type == 'Invoke Bot':
+                botcode = open('./running/bot_algo.py', 'r').read()
+                f.write(botcode)  # and ADD botcode that is is our alog code from bot_algo.py file
+
+                code_lines = code.split("\n")
+                main_call_code = self.extract_input_output_names(code_lines)
+                f.write(main_call_code)
+                f.write("\n")
 
         self._run_py_prog(filename)
         return self.stderr, self.stdout

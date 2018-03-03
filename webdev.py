@@ -20,17 +20,21 @@ default_cols = "60"
 def runpy():
     if request.method == 'POST':
         code = request.form['code']
+        submit_type = request.form['button1']
         run = runcode.RunPyCode(code)
-        rescompil, resrun = run.run_py_code()
+        rescompil, resrun = run.run_py_code(submit_type, code)
         if not resrun:
             resrun = 'No result!'
+
+        if submit_type == 'Invoke Bot':
+            code = code + '\n' + resrun
+            resrun = '' # do not display any thing on RUN window
+        elif submit_type == 'Launch':
+            pass  # do nothing
     else:
         code = default_py_code
         resrun = 'No result!'
         rescompil = "No compilation for Python"
-
-    #resrun = resrun + '\n# newly added line'
-    code = code + '\n' + resrun
 
     return render_template("main.html",
                            code=code,
@@ -40,4 +44,5 @@ def runpy():
                            rows=default_rows, cols=default_cols)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
+    #app.run()
