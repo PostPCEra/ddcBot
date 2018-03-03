@@ -33,7 +33,7 @@ def runpy():
             pass  # do nothing
     else:
         code = default_py_code
-        resrun = 'No result!'
+        resrun = 'No result! 2'
         rescompil = "No compilation for Python"
 
     return render_template("main.html",
@@ -44,5 +44,6 @@ def runpy():
                            rows=default_rows, cols=default_cols)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    #app.config["CACHE_TYPE"] = "null"
+    app.run(debug=True)   # this debug flag detects "code file chagnes & start Flash server automatically"
     #app.run()

@@ -18,8 +18,8 @@ class RunPyCode(object):
         return result
 
 
-    def extract_input_output_names(self, code_lines):
-        #lines = code.split("\n")
+    def extract_input_output_names(self, code):
+        code_lines = code.split("\n")
         ioline = ""
         for line in code_lines:
             if '@input' in line:
@@ -44,8 +44,11 @@ class RunPyCode(object):
                 botcode = open('./running/bot_algo.py', 'r').read()
                 f.write(botcode)  # and ADD botcode that is is our alog code from bot_algo.py file
 
+                '''
                 code_lines = code.split("\n")
                 main_call_code = self.extract_input_output_names(code_lines)
+                '''
+                main_call_code = self.extract_input_output_names(code)
                 f.write(main_call_code)
                 f.write("\n")
 
