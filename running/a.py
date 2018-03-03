@@ -1,11 +1,10 @@
 import sys
 import os
 
-asr = [ 1, 3, 4]
-gitu = [ 2, 4, 5]
+a = [ 1, 3, 4]
+b = [ 2, 6, 8]
 
-# @input = asr ; @output = gitu
-
+# @input = a ; @output = b
 
 #Om Sri
 
@@ -121,4 +120,4 @@ def find_type(item):
       print("not list type")
 """
 
-main_entry_point('asr' , 'gitu')
+main_entry_point('a' , 'b')
