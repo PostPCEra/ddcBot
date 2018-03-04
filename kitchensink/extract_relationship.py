@@ -13,8 +13,8 @@ def extract_relationship(inp, outp):
     zp = zip(inp, outp)
     zlist = sorted(zp, key=lambda p: p[0])  # sorting  based on the values of x in each (x,y) pair
 
-    two_or_more = [x for x in outp if outp.count(x) > 1]
-    category_list = set(two_or_more) # removes duplicates
+    freq_two_or_more = [x for x in outp if outp.count(x) > 1]
+    category_list = set(freq_two_or_more) # removes duplicates
     print(category_list)
 
     occr = { 'remaining' : ([ ], [ ]) }

@@ -10,9 +10,10 @@ Created on Fri Feb 23 18:55:45 2018
 # -------------------  *****************  ---------------------------
 
 # https://stackoverflow.com/questions/9835762/find-and-list-duplicates-in-a-list
-l = [1, 2, 3, 4, 4, 5, 5, 6, 1]
-uniq = set([x for x in l if l.count(x) > 1])
-# {1, 4, 5}
+lst = [1, 2, 3, 4, 4, 5, 5, 6, 1]
+freq_two_or_more = [x for x in lst if lst.count(x) > 1]
+uniq = set(freq_two_or_more)  # removes duplicates
+print(uniq)  # {1, 4, 5}
 
 
 # https://stackoverflow.com/questions/43698531/sorting-a-zipped-object-in-python-3
@@ -21,7 +22,7 @@ l2 = ['a', 'b', 'c', 'd', 'e']
 zp = zip(l1, l2)
 
 slist = sorted(zp, key=lambda p: p[1])  # sorting  based on the values of y in each (x,y) pair , for x sort use p[0]
-# [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
+print(slist)  # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
 
 
 # https://stackoverflow.com/questions/16628088/euclidean-algorithm-gcd-with-multiple-numbers
