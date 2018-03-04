@@ -20,5 +20,5 @@ l1 = [3, 9, 2, 24, 1, 6]
 l2 = ['a', 'b', 'c', 'd', 'e']
 zp = zip(l1, l2)
 
-slist = sorted(zp, key=lambda a: a[1])  # sorting  based on the values of y in each (x,y) pair , for x sort use a[0]
+slist = sorted(zp, key=lambda p: p[1])  # sorting  based on the values of y in each (x,y) pair , for x sort use p[0]
 # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
