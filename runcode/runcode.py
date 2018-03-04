@@ -29,7 +29,7 @@ class RunPyCode(object):
         elm = ioline.split(";")
         input_var = elm[0].split('=')[-1]
         output_var = elm[1].split('=')[-1]
-        code_str = "main_entry_point('{}' , '{}')".format(input_var.strip(), output_var.strip())
+        code_str = "main_entry_point('{}' , '{}')\n".format(input_var.strip(), output_var.strip())
         return code_str
 
     def run_py_code(self, submit_type, code=None):
@@ -44,13 +44,8 @@ class RunPyCode(object):
                 botcode = open('./running/bot_algo.py', 'r').read()
                 f.write(botcode)  # and ADD botcode that is is our alog code from bot_algo.py file
 
-                '''
-                code_lines = code.split("\n")
-                main_call_code = self.extract_input_output_names(code_lines)
-                '''
                 main_call_code = self.extract_input_output_names(code)
                 f.write(main_call_code)
-                f.write("\n")
 
         self._run_py_prog(filename)
         return self.stderr, self.stdout

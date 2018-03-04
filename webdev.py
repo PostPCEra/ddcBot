@@ -33,7 +33,7 @@ def runpy():
             pass  # do nothing
     else:
         code = default_py_code
-        resrun = 'No result! 2'
+        resrun = 'No result!'
         rescompil = "No compilation for Python"
 
     return render_template("main.html",
@@ -44,6 +44,8 @@ def runpy():
                            rows=default_rows, cols=default_cols)
 
 if __name__ == "__main__":
+    # good Cache article : http: // brunorocha.org / python / flask / using - flask - cache.html
     #app.config["CACHE_TYPE"] = "null"
+
     app.run(debug=True)   # this debug flag detects "code file chagnes & start Flash server automatically"
     #app.run()

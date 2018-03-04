@@ -2,8 +2,26 @@
 
 #Om Sri
 
+# ------------------- extract relationship -------------------------
+#
+# -------------------  *****************  ---------------------------
+def extract_relationship(inp, outp):
 
-# ****** ------- find replationship between input and out
+    zp = zip(inp, outp)
+    zlist = sorted(zp, key=lambda p: p[0])  # sorting  based on the values of x in each (x,y) pair
+
+    two_or_more = [x for x in outp if outp.count(x) > 1]
+    uniq = set(two_or_more) # removes duplicates
+
+    # https: // stackoverflow.com / questions / 473099 / check - if -a - given - key - already - exists - in -a - dictionary - and -increment - it
+    occr = { }
+    for p in zlist:
+
+
+
+# ------------------- find relationship between input and out ------
+#
+# -------------------  *****************  ---------------------------
 def find_relationship( inp, outp):
     v1, v2 = (inp, outp)
     if ( inp [1] > outp[1]): #keep bigger values in v2
@@ -38,7 +56,8 @@ def find_relationship( inp, outp):
 
 # ****** ------- construct & return function CODE
 def get_fn_code(inp, outp, var1, op1, op2):
-    
+
+    #value = eval(out1)/ eval(in1)
     code = "{} = [ ]\n".format(outp) + \
     "{} = {} \n".format(var1, 2) + \
     "for x in {}:\n\t".format(inp)  + \
