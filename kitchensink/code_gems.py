@@ -23,6 +23,18 @@ zp = zip(l1, l2)
 slist = sorted(zp, key=lambda p: p[1])  # sorting  based on the values of y in each (x,y) pair , for x sort use p[0]
 # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
 
+
+# https://stackoverflow.com/questions/16628088/euclidean-algorithm-gcd-with-multiple-numbers
+from fractions import gcd
+lis = [3, 6, 9, 12]
+result = gcd(*lis[:2])  #get the gcd of first two numbers
+if len(lis) >2:
+    for x in lis[2:]:    #now iterate over the list starting from the 3rd element
+        result = gcd(result,x)
+#print(result)
+
+
+
 # ------------------- extract relationship -------------------------
 #
 # -------------------  *****************  ---------------------------
@@ -35,11 +47,10 @@ def extract_relationship(inp, outp):
     category_list = set(two_or_more) # removes duplicates
     print(category_list)
     # https: // stackoverflow.com / questions / 473099 / check - if -a - given - key - already - exists - in -a - dictionary - and -increment - it
-    occr = { 'remaining' : [ ] }
-    for x in uniq:
+    occr = { 'remaining' : ([ ], [ ]) }
+    for x in category_list:
         occr[x] = [ ]
 
-    a = occr['remaining']
     print(occr)
 
     for pair in zlist:
@@ -49,11 +60,21 @@ def extract_relationship(inp, outp):
             tmp.append(key)
             occr[value] = tmp
         else:
-            tmp = occr['remaining']
-            tmp.append(key)
-            occr['remaining'] = tmp
+            key_list, value_list = occr['remaining']
+            key_list.append(key)
+            value_list.append(value)
+            occr['remaining'] = (key_list, value_list)
 
     print(occr)
+
+    in_l, out_l = occr['remaining']
+    diff = in_l[0] - out_l[0]
+    for i, _ in enumerate(in_l):
+        if ( (in_l[i] - out_l[i]) != diff ):
+            print(False)
+
+
+
 # ------------------- main -------------------------
 def main():
     input_l = list(range(1,17))
@@ -63,3 +84,10 @@ def main():
 # ------------------- call main -------------------
 main()
 
+from fractions import gcd
+lis = [3, 6, 9, 12]
+result = gcd(*lis[:2])  #get the gcd of first two numbers
+if len(lis) >2:
+    for x in lis[2:]:    #now iterate over the list starting from the 3rd element
+        result = gcd(result,x)
+print(result)
