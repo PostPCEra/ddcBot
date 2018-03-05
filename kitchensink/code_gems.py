@@ -24,6 +24,35 @@ zp = zip(l1, l2)
 slist = sorted(zp, key=lambda p: p[1])  # sorting  based on the values of y in each (x,y) pair , for x sort use p[0]
 print(slist)  # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
 
+# --------------  Global Variable ------------------------
+# https://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them?rq=1
+globvar = 0
+
+def set_globvar_to_one():
+    global globvar    # Needed to modify global copy of globvar
+    globvar = 1
+
+def print_globvar():
+    print(globvar)     # No need for global declaration to read value of globvar
+
+set_globvar_to_one()
+print(globvar)       # Prints 1
+
+
+# sample.py
+myGlobal = 5
+
+def func1():
+    myGlobal = 42
+
+def func2():
+    print(myGlobal)
+
+func1()
+func2() # prints 5
+
+# --------------------------    ---------------------------------------------------
+
 
 # https://stackoverflow.com/questions/16628088/euclidean-algorithm-gcd-with-multiple-numbers
 from fractions import gcd
