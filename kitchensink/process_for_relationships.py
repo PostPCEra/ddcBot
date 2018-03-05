@@ -6,7 +6,10 @@ Created on Fri Feb 23 18:55:45 2018
 @author:  
 """
 # global definitions
-CAT_TYPE_ALLOTHER = 'allother'
+CAT_TYPE_ALLOTHER = 'allother'  # Category type
+REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
+REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
+REL_TYPE_UNKNOWN = 'unknown'
 
 
 # ------------------- find all relationships -------------------------
@@ -14,10 +17,60 @@ CAT_TYPE_ALLOTHER = 'allother'
 # -------------------  *****************  ------------------------
 
 def find_relation_input_to_output(input_l, output_l):
-    pass
+
+    lst = input_l
+    lst2 = output_l
+
+    delta = lst2[0] - lst[0]
+    in_relation = True
+    for ind in range(len(lst)):
+        if not (lst2[ind] - lst[ind] == delta):
+            in_relation = False
+            break
+
+    if in_relation:
+        return REL_TYPE_ARITHMETIC_SEQUENCE
+
+    multiple = lst2[1] / lst[0]
+    in_relation = True
+    for ind in range(len(lst)):
+        if not (lst2[ind] / lst[ind] == multiple):
+            in_relation = False
+            break
+
+    if in_relation:
+        return REL_TYPE_GEOMETRIC_SEQUENCE
+    else:
+        return REL_TYPE_UNKNOWN
+
+
 
 def find_relation_among_elements(input_l):
-    pass
+
+    lst = input_l
+
+    delta = lst[1] - lst[0]
+    in_relation = True
+    for ind in range(len(lst) - 1):
+        if not (lst[ind + 1] - lst[ind] == delta):
+            in_relation = False
+            break
+
+    if in_relation:
+        return REL_TYPE_ARITHMETIC_SEQUENCE
+
+    multiple = lst[1] / lst[0]
+    in_relation = True
+    for ind in range(len(lst) - 1):
+        if not (lst[ind + 1] / lst[ind] == multiple):
+            in_relation = False
+            break
+
+    if in_relation:
+        return REL_TYPE_GEOMETRIC_SEQUENCE
+    else:
+        return REL_TYPE_UNKNOWN
+
 
 def find_all_relationships(categories):
 
@@ -30,6 +83,7 @@ def find_all_relationships(categories):
             input_l = value
             cat_realtionships[key] = find_relation_among_elements(input_l)
 
+    print(cat_realtionships)
     return cat_realtionships
 
 
@@ -79,13 +133,6 @@ def process_for_relationships(input_l, output_l):
 
     cat_realtionships = find_all_relationships(categories)
 
-    in_l, out_l = categories[CAT_TYPE_ALLOTHER]
-    diff = in_l[0] - out_l[0]
-    for i, _ in enumerate(in_l):
-        if ( (in_l[i] - out_l[i]) != diff ):
-            print(False)
-
-
 
 # ------------------- main -------------------------
 def main():
@@ -96,10 +143,3 @@ def main():
 # ------------------- call main -------------------
 main()
 
-from fractions import gcd
-lis = [3, 6, 9, 12]
-result = gcd(*lis[:2])  #get the gcd of first two numbers
-if len(lis) >2:
-    for x in lis[2:]:    #now iterate over the list starting from the 3rd element
-        result = gcd(result,x)
-print(result)
