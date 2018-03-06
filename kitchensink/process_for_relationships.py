@@ -5,7 +5,7 @@ Created on Fri Feb 23 18:55:45 2018
 
 @author:  
 """
-# global definitions
+# global constants
 CAT_TYPE_ALLOTHER = 'allother'  # Category type
 REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
 REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
@@ -31,7 +31,7 @@ def find_relation_input_to_output(input_l, output_l):
     if in_relation:
         return REL_TYPE_ARITHMETIC_SEQUENCE
 
-    multiple = lst2[1] / lst[0]
+    multiple = lst2[0] / lst[0]
     in_relation = True
     for ind in range(len(lst)):
         if not (lst2[ind] / lst[ind] == multiple):
@@ -113,6 +113,31 @@ def extract_categories(zip_inout, output_categories):
 
     return categories
 
+# ------------------- generate CODE  -------------------------
+#
+
+def get_loop_code(varname, value, oper,input_symbol, output_symbol):
+
+    code = "{} = [ ]\n".format(output_symbol) + \
+           "{} = {} \n".format(varname, value) + \
+           "for x in {}:\n\t".format(input_symbol) + \
+           "{}.append({} {} x)\n\n\t".format(output_symbol, varname, oper)
+    return code
+
+def generate_code(categories, cat_relationships):
+
+    length = len(categories)
+    if length == 1:
+        input, output = categories[CAT_TYPE_ALLOTHER]  # input/output values
+        if cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_ARITHMETIC_SEQUENCE:
+            varname, value, oper = ("delta", output[0]-input[0], "+")
+        else:
+            varname, value, oper = ("ratio", output[0]/input[0], "*")
+
+        input_symbol, output_symbol = 'a', 'b'
+        code = get_loop_code(varname, value, oper, input_symbol, output_symbol)
+        #print(code)
+        return code
 
 # ------------------- process for relationship -------------------------
 #
@@ -131,14 +156,26 @@ def process_for_relationships(input_l, output_l):
 
     print(categories)
 
-    cat_realtionships = find_all_relationships(categories)
+    cat_relationships = find_all_relationships(categories)
+
+    code = generate_code(categories, cat_relationships)
+    print(code)
 
 
 # ------------------- main -------------------------
+#
+# ---------------------------------------------------
+
 def main():
-    input_l = list(range(1,17))
-    output_l = [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14 ]
-    o = process_for_relationships(input_l, output_l)
+
+    test_suite = [  ([1, 5, 8], [6, 10, 13]),
+                    ([2, 6, 7], [10, 30, 35]),
+                    (list(range(1, 15)), [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14] )
+                 ]
+
+    for pair in test_suite:
+        input, output = pair
+        o = process_for_relationships(input, output)
 
 # ------------------- call main -------------------
 main()
