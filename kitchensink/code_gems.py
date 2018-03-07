@@ -57,8 +57,10 @@ for elt, items in groupby(x, itemgetter(1)):
     for i in items:
         print(i)
 
+# Enumerate(lst) is the crux of all 'nested Lists' manipulation Filtering etc..
+# this works well, the next code given in url seems over kill
 filter_list = [row for i, row in enumerate(x) if row[3] == '2somename']
-# this works well, the following code given in url seems over kill
+
 
 from pprint import pprint as pp
 y = groupby(x, itemgetter(1))  # Now y is an iterator containing tuples of (element, item iterator).
