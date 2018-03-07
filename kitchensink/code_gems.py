@@ -52,14 +52,16 @@ from operator import itemgetter
 x.sort(key=itemgetter(1))
 
 from itertools import groupby
-y = groupby(x, itemgetter(1))  # Now y is an iterator containing tuples of (element, item iterator).
-
 for elt, items in groupby(x, itemgetter(1)):
     print(elt, items)
     for i in items:
         print(i)
 
+filter_list = [row for i, row in enumerate(x) if row[3] == '2somename']
+# this works well, the following code given in url seems over kill
+
 from pprint import pprint as pp
+y = groupby(x, itemgetter(1))  # Now y is an iterator containing tuples of (element, item iterator).
 pp([y for y in x if y[3] == '2somename'])
 
 
