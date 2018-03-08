@@ -5,6 +5,8 @@ Created on Fri Feb 23 18:55:45 2018
 
 @author:  
 """
+import functools
+
 # global constants
 CAT_TYPE_ALLOTHER = 'allother'  # Category type
 REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
@@ -111,6 +113,10 @@ def extract_categories(zip_inout, output_categories):
             value_list.append(value)
             categories[CAT_TYPE_ALLOTHER] = (key_list, value_list)
 
+    lst1, lst2 = categories[CAT_TYPE_ALLOTHER]
+    if len(lst1) == 0:
+        categories.pop(CAT_TYPE_ALLOTHER, None)  # since lists are empty remove key
+
     return categories
 
 # ------------------- generate CODE  -------------------------
@@ -124,7 +130,28 @@ def get_loop_code(varname, value, oper,input_symbol, output_symbol):
            "{}.append({} {} x)\n\n".format(output_symbol, varname, oper)
     return code
 
-def get_category_code(dict1, delta,  input_symbol, output_symbol):
+def get_category_code(cat_lst, edge_values, input_symbol, output_symbol):
+
+    code = "{} = [ ]\n".format(output_symbol) + \
+           "for n in {}:\n\t".format(input_symbol)
+
+    segment = "if n <= {}:\n\t\t".format(edge_values[0]) + \
+                "element = '{}'\n\t".format(cat_lst[0][0])
+
+    idx = 1
+    for key, value in cat_lst[1:]:
+        tmp = "elif n <= {}:\n\t\t".format(edge_values[idx]) + \
+                "element = '{}'\n\t".format(key)
+        segment = segment + tmp
+        idx = idx + 1
+
+    tmp = "\n{}.append(element)\n\n\t".format(output_symbol)
+
+    code = code + segment + tmp
+    # print(code)
+    return code
+
+def get_sequence_code(dict1, delta,  input_symbol, output_symbol):
 
     from operator import itemgetter
 
@@ -170,6 +197,39 @@ def generate_code(categories, cat_relationships):
         #print(code)
         return code
 
+    elif REL_TYPE_UNKNOWN in cat_relationships.values():
+        print('********** Unknown relationship')
+
+        cat_lst = list(categories.items())
+        #print(cat_lst)
+        def docompare(item1, item2):
+            val1, val2 = item1[1], item2[1]
+            return val1[0] - val2[0]
+
+        cat_sorted = sorted(cat_lst, key=functools.cmp_to_key(docompare))
+        print(cat_sorted)
+
+        first_item = cat_sorted[0][1]
+        small = first_item[0]
+        edge_values = [first_item[-1]]
+        ordered_category = True
+
+        for _, item in cat_sorted[1:]:
+            if small < item[0]:
+                small = item[0]
+                edge_values.append(item[-1])
+            else:
+                ordered_category = False
+                break
+
+        print(edge_values)
+
+        if not ordered_category:
+            return " -------- NOT Ordered "
+
+        code = get_category_code(cat_sorted, edge_values, input_symbol, output_symbol)
+        return code
+
     else:
         eachcat_with_onevalue = {}  # init
         for key, value in categories.items():
@@ -184,7 +244,7 @@ def generate_code(categories, cat_relationships):
         delta = eachcat_with_onevalue.pop(CAT_TYPE_ALLOTHER, None) # save value and remove key
         print(eachcat_with_onevalue)
 
-        code = get_category_code(eachcat_with_onevalue, delta,  input_symbol, output_symbol)
+        code = get_sequence_code(eachcat_with_onevalue, delta,  input_symbol, output_symbol)
         return code
 
 # ------------------- process for relationship -------------------------
@@ -217,7 +277,9 @@ def main():
 
     test_suite = [  ([1, 5, 8], [6, 10, 13]),
                     ([2, 6, 7], [10, 30, 35]),
-                    (list(range(1, 15)), [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14] )             ]
+                    (list(range(1, 15)), [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14] ),
+                    ([2, 6,12, 13,15, 19, 20, 58], ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult'])
+                 ]
 
     for pair in test_suite:
         input, output = pair
