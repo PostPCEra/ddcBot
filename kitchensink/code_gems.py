@@ -34,7 +34,23 @@ print(slist)  # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
 # https://stackoverflow.com/questions/14466068/sort-a-list-of-tuples-by-second-value-reverse-true-and-then-by-key-reverse-fal
 from operator import itemgetter
 d.sort(key=itemgetter(0))
-d.sort(key=itemgetter(1),reverse=True)
+d.sort(key=itemgetter(1), reverse=True)
+
+# sort Dictionary : convert to List, use functools lib
+# https://stackoverflow.com/questions/5213033/sort-list-of-list-with-custom-compare-function-in-python
+import functools
+dict1 = {'adult': [20, 58], 'child': [2, 6, 12], 'teen': [13, 15, 19]}
+
+cat_lst = list(dict1.items())
+print(cat_lst)
+
+def docompare(item1, item2):   # can be any user defined function name, two elements of the list are passed each time
+    val1, val2 = item1[1], item2[1]
+    return val1[0] - val2[0]  #  should return one of ( negative, 0 , postive number ), this is basis for comparision
+
+sl = sorted(cat_lst, key=functools.cmp_to_key(docompare))
+print(sl)
+# [('child', [2, 6, 12]), ('teen', [13, 15, 19]), ('adult', [20, 58])]
 
 
 # Sorting and Grouping Nested Lists in Python :
