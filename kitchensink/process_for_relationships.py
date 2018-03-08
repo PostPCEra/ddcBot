@@ -135,10 +135,11 @@ def get_category_code(cat_lst, edge_values, input_symbol, output_symbol):
     code = "{} = [ ]\n".format(output_symbol) + \
            "for n in {}:\n\t".format(input_symbol)
 
-    segment = "if n <= {}:\n\t\t".format(edge_values[0]) + \
+    idx = 0
+    segment = "if n <= {}:\n\t\t".format(edge_values[idx]) + \
                 "element = '{}'\n\t".format(cat_lst[0][0])
 
-    idx = 1
+    idx = idx + 1
     for key, value in cat_lst[1:]:
         tmp = "elif n <= {}:\n\t\t".format(edge_values[idx]) + \
                 "element = '{}'\n\t".format(key)
