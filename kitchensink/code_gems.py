@@ -36,6 +36,14 @@ from operator import itemgetter
 d.sort(key=itemgetter(0))
 d.sort(key=itemgetter(1), reverse=True)
 
+# Dictionary List search : https://stackoverflow.com/questions/8653516/python-list-of-dictionaries-search
+people = [{'name': 'Tom', 'age': 10}, {'name': 'Mark', 'age': 5}, {'name': 'Pam', 'age': 7}]
+result = [ row for row in people if people['name'] == 'Pam']
+result = [ row for row in people if people.get('name2222', '') == 'Pam'] # greaceful no execption if 'name2222' don't exists
+if len(result):
+    print(result[0])
+
+
 # sort Dictionary : convert to List, use functools lib
 # https://stackoverflow.com/questions/5213033/sort-list-of-list-with-custom-compare-function-in-python
 import functools
