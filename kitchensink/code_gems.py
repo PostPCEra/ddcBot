@@ -9,6 +9,19 @@ Created on Fri Feb 23 18:55:45 2018
 #
 # -------------------  *****************  -------------------------import timeit
 
+
+# Macros, Batch renaming of variables & Multi-cursors  in Pycharm editor
+#    https://stackoverflow.com/questions/39746405/is-there-a-keyboard-shortcut-in-pycharm-for-renaming-a-specific-variable
+# Macros : there are pre-built macros :  compl -> comprehension for List , compd -> dictionary , iter etcc.
+#   - type 'compl' & TAB key to select , or 'comp' will show all matching one as list , you pick
+#   - you can also define your own, see  Pycharm->Preferences -> Editor -> Live Templates
+#
+# Batch renaming of vars : select a var , SHIFT + fn+ f6 , will highlight others , start modifying
+# Multi-cursors : place a cursor, hold <ALT Option> key and 'mouse click' all other places . Then start editing
+# Best part : all these edit are  can be UNDO or REDO  under Edit menu ... cool
+
+
+
 # https://docs.python.org/2/library/timeit.html
 import timeit
 timeit.timeit('"-".join(str(n) for n in range(100))', number=10000)
