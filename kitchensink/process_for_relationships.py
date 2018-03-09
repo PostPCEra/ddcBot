@@ -7,6 +7,22 @@ Created on Fri Feb 23 18:55:45 2018
 """
 import functools
 
+# ---------- TODO -----------------------------
+# 0. Error condition test cases & code changes to handle those
+# 1. Logging : http://docs.python-guide.org/en/latest/writing/logging/
+# 2. Refactor code
+#
+# Features :
+# DONE : simple arthimatic/geometric sequence
+# DONE : Fizz buzz style continuous sequences ( with delta also)
+# DONE : categories ( child, teen, adult )
+#
+# Data structures : Lists, Dictionary, tuple,
+#    @input = lst, 3 ; @output = lst2  ( here 3 indicates check for filed 4 ( 0 based) for clue on how to Derive Output
+# Date/Time simple input/output conversions
+# Filter : student records whose grade below 60%
+#  ---------- TODO -----------------------------
+
 # global constants
 CAT_TYPE_ALLOTHER = 'allother'  # Category type
 REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
@@ -122,18 +138,18 @@ def extract_categories(zip_inout, output_categories):
 # ------------------- generate CODE  -------------------------
 #
 
-def get_loop_code(varname, value, oper,input_symbol, output_symbol):
+def get_loop_code(varname, value, oper):
 
-    code = "{} = [ ]\n".format(output_symbol) + \
+    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
            "{} = {} \n".format(varname, value) + \
-           "for x in {}:\n\t".format(input_symbol) + \
-           "{}.append({} {} x)\n\n".format(output_symbol, varname, oper)
+           "for x in {}:\n\t".format(INPUT_SYMBOL) + \
+           "{}.append({} {} x)\n\n".format(OUTPUT_SYMBOL, varname, oper)
     return code
 
-def get_category_code(cat_lst, edge_values, input_symbol, output_symbol):
+def get_category_code(cat_lst, edge_values):
 
-    code = "{} = [ ]\n".format(output_symbol) + \
-           "for n in {}:\n\t".format(input_symbol)
+    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
+           "for n in {}:\n\t".format(INPUT_SYMBOL)
 
     idx = 0
     segment = "if n <= {}:\n\t\t".format(edge_values[idx]) + \
@@ -146,13 +162,13 @@ def get_category_code(cat_lst, edge_values, input_symbol, output_symbol):
         segment = segment + tmp
         idx = idx + 1
 
-    tmp = "\n{}.append(element)\n\n\t".format(output_symbol)
+    tmp = "\n{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
 
     code = code + segment + tmp
     # print(code)
     return code
 
-def get_sequence_code(dict1, delta,  input_symbol, output_symbol):
+def get_sequence_code(dict1, delta):
 
     from operator import itemgetter
 
@@ -162,8 +178,8 @@ def get_sequence_code(dict1, delta,  input_symbol, output_symbol):
     tuple_lst.sort(key=itemgetter(0))
     tuple_lst.sort(key=itemgetter(1), reverse=True)
 
-    code = "{} = [ ]\n".format(output_symbol) + \
-           "for n in {}:\n\t".format(input_symbol)
+    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
+           "for n in {}:\n\t".format(INPUT_SYMBOL)
 
     segment = "if n % {} == 0:\n\t\t".format(tuple_lst[0][1]) + \
                 "element = '{}'\n\t".format(tuple_lst[0][0])
@@ -176,7 +192,7 @@ def get_sequence_code(dict1, delta,  input_symbol, output_symbol):
     tmp2 = "" if delta == 0 else " + {}".format(delta)
     tmp = "else:\n\t\t" + \
           "element = n {}\n\n".format(tmp2) + \
-            "{}.append(element)\n\n\t".format(output_symbol)
+            "{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
 
     code = code + segment + tmp
     print(code)
@@ -194,7 +210,7 @@ def generate_code(categories, cat_relationships):
         else:
             varname, value, oper = ("ratio", output[0]/input[0], "*")
 
-        code = get_loop_code(varname, value, oper, input_symbol, output_symbol)
+        code = get_loop_code(varname, value, oper)
         #print(code)
         return code
 
@@ -210,10 +226,12 @@ def generate_code(categories, cat_relationships):
         cat_sorted = sorted(cat_lst, key=functools.cmp_to_key(docompare))
         print(cat_sorted)
 
+
         first_item = cat_sorted[0][1]
         small = first_item[0]
         edge_values = [first_item[-1]]
         ordered_category = True
+
 
         for _, item in cat_sorted[1:]:
             if small < item[0]:
@@ -228,7 +246,7 @@ def generate_code(categories, cat_relationships):
         if not ordered_category:
             return " -------- NOT Ordered "
 
-        code = get_category_code(cat_sorted, edge_values, input_symbol, output_symbol)
+        code = get_category_code(cat_sorted, edge_values)
         return code
 
     else:
@@ -245,16 +263,15 @@ def generate_code(categories, cat_relationships):
         delta = eachcat_with_onevalue.pop(CAT_TYPE_ALLOTHER, None) # save value and remove key
         print(eachcat_with_onevalue)
 
-        code = get_sequence_code(eachcat_with_onevalue, delta,  input_symbol, output_symbol)
+        code = get_sequence_code(eachcat_with_onevalue, delta)
         return code
 
 # ------------------- process for relationship -------------------------
 #
 # -------------------  *****************  ---------------------------
 def process_for_relationships(input_l, output_l):
-
     freq_two_or_more = [x for x in output_l if output_l.count(x) > 1]
-    output_categories = set(freq_two_or_more) # removes duplicates
+    output_categories = set(freq_two_or_more)  # removes duplicates
     print(output_categories)
 
     if len(output_categories) == 0:
@@ -271,24 +288,51 @@ def process_for_relationships(input_l, output_l):
     print(code)
 
 
+def main_entry_point(input_as_symbol, output_as_symbol):
+    global INPUT_SYMBOL    # need to state we are accessing Globally declared ones in this local method in order to modify them
+    global OUTPUT_SYMBOL
+    INPUT_SYMBOL = input_as_symbol  # now access these in code_gen() methods
+    OUTPUT_SYMBOL = output_as_symbol
+
+    input_as_value = eval(input_as_symbol)
+    output_as_value = eval(output_as_symbol)
+    code = process_for_relationships(input_as_value, output_as_value)   # pass values of variable
+    return code
+
 # ------------------- main -------------------------
-#
+# 1. this main() is executed when this file is RUN as standalone file execution such as "$python process_for*.py"
+# 2. when this flie is part of webserver call stack , main_entry_point() method is called directly
 # ---------------------------------------------------
 def main():
 
     test_suite = [  ([1, 5, 8], [6, 10, 13]),
                     ([2, 6, 7], [10, 30, 35]),
                     (list(range(1, 15)), [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14] ),
-                    ([2, 6,12, 13,15, 19, 20, 58], ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult'])
-                 ]
+                    (list(range(1, 11)), [5, 6, 'fizz', 8, 'buzz', 'fizz', 11, 12, 'fizz','buzz']),
+                    ([2, 6,12, 13,15, 19, 20, 58], ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult']),
 
-    for pair in test_suite:
-        input, output = pair
-        o = process_for_relationships(input, output)
+                    ([{'name': 'asr', 'grade': 45}, {'name': 'pad', 'grade': 40}, {'name': 'gitu','grade': 15}, {'name': 'anv', 'grade': 20}],
+                      [{'name': 'gitu', 'grade': 15}, {'name': 'anv', 'grade': 20}])
+                 ]
+    # [ x for x in lst if x[1] < 21 ]
+
+    #for pair2 in test_suite[3:4]:  # by simpy changing index, we can selectively feed the test cases we like
+    for pair2 in test_suite[:4]:
+        global input_val_g, output_val_g
+        input_val_g, output_val_g = pair2
+        o = main_entry_point('input_val_g', 'output_val_g')
 
 # ------------------- call main -------------------
 # invoke/call main() only when this stand alone file is executed as '$python <file.py>'
 # when this file is imported into another file, main() is NOT called
+
+# Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() place
+INPUT_SYMBOL = ''
+OUTPUT_SYMBOL = ''
+
+input_val_g = []
+output_val_g = []
+
 if __name__ == '__main__':
     main()
 
