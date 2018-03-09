@@ -15,7 +15,7 @@ def extract_relationship(inp, outp):
 
     # https: // stackoverflow.com / questions / 473099 / check - if -a - given - key - already - exists - in -a - dictionary - and -increment - it
     occr = { }
-    for p in zlist:
+    #for p in zlist:
 
 
 
@@ -58,10 +58,10 @@ def find_relationship( inp, outp):
 def get_fn_code(inp, outp, var1, op1, op2):
 
     #value = eval(out1)/ eval(in1)
-    code = "{} = [ ]\n".format(outp) + \
+    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
     "{} = {} \n".format(var1, 2) + \
-    "for x in {}:\n\t".format(inp)  + \
-    "{}.append({} {} x)\n\n\t".format(outp, var1, op2)
+    "for x in {}:\n\t".format(INPUT_SYMBOL)  + \
+    "{}.append({} {} x)\n\n\t".format(OUTPUT_SYMBOL, var1, op2)
     
     #print(code)
     return code
@@ -70,6 +70,11 @@ def get_fn_code(inp, outp, var1, op1, op2):
 # ****** ------- 
 # pass parms as argv * * so you can have any number with out naming.
 def main_entry_point(in1, out1):
+    global INPUT_SYMBOL    # need to state we are accessing Globally declared ones in this local method in order to modify them
+    global OUTPUT_SYMBOL
+    INPUT_SYMBOL = in1  # now access these in code_gen() methods
+    OUTPUT_SYMBOL = out1
+
     in1_val = eval(in1)
     out1_val = eval(out1)
     rel = find_relationship(in1_val, out1_val)   # pass values of variable
@@ -88,6 +93,11 @@ def main_entry_point(in1, out1):
   
 
 # ****** ------- MAIN program
+
+# Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() place
+INPUT_SYMBOL = ''
+OUTPUT_SYMBOL = ''
+
 
 relation = {
   'ratio1' : 0,
@@ -117,19 +127,5 @@ outp2 = [3, 4, 8, 9]
 
 #main_entry_point(inp, outp)
 
- 
 
-# ****** -------  
-# TODO for Latter  **************************
-# ****** ------- find data types
-"""
-var_types = []
-#from types import *
-def find_type(item):
-  i = 0
-  if type(item) is ListType:
-      var_types[i] = ListType
-  else :
-      print("not list type")
-"""
 
