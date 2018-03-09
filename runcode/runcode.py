@@ -29,7 +29,10 @@ class RunPyCode(object):
         elm = ioline.split(";")
         input_var = elm[0].split('=')[-1]
         output_var = elm[1].split('=')[-1]
-        code_str = "main_entry_point('{}' , '{}')\n".format(input_var.strip(), output_var.strip())
+
+        input, output = input_var.strip(), output_var.strip()
+        # first 2 params as symbols '{}', next 2 as value
+        code_str = "main_entry_point('{}' , '{}', {}, {})\n".format(input, output, input, output)
         return code_str
 
     def run_py_code(self, submit_type, code=None):

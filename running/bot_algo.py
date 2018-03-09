@@ -293,13 +293,21 @@ def process_for_relationships(input_l, output_l):
     print(code)
 
 
-def main_entry_point(input_as_symbol, output_as_symbol):
+def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value):
     global INPUT_SYMBOL    # need to state we are accessing Globally declared ones in this local method in order to modify them
     global OUTPUT_SYMBOL
     INPUT_SYMBOL = input_as_symbol  # now access these in code_gen() methods
     OUTPUT_SYMBOL = output_as_symbol
 
-    input_as_value = eval(input_as_symbol)
-    output_as_value = eval(output_as_symbol)
+    #input_as_value = eval(input_as_symbol)  # not working for stand alone , so levae it
+    input_as_value =  in_as_value
+    output_as_value = out_as_value
+
+    print('------------- passed input/output values   ----------------')
+    print(input_as_symbol)
+    print(output_as_symbol)
+    print(input_as_value)
+    print(output_as_value)
+
     code = process_for_relationships(input_as_value, output_as_value)   # pass values of variable
     return code
