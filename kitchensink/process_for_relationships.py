@@ -29,6 +29,9 @@ REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
 REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
 REL_TYPE_UNKNOWN = 'unknown'
 
+# Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() functions
+INPUT_SYMBOL = ''
+OUTPUT_SYMBOL = ''
 
 # ------------------- find all relationships -------------------------
 #
@@ -317,22 +320,20 @@ def main():
     # [ x for x in lst if x[1] < 21 ]
 
     #for pair2 in test_suite[3:4]:  # by simpy changing index, we can selectively feed the test cases we like
-    for pair2 in test_suite[:4]:
-        global input_val_g, output_val_g
-        input_val_g, output_val_g = pair2
+    for pair in test_suite[:4]:
+
+        global input_val_g, output_val_g # need to declare them as we are going to modify these global vars
+        input_val_g, output_val_g = pair
+
         o = main_entry_point('input_val_g', 'output_val_g')
+
 
 # ------------------- call main -------------------
 # invoke/call main() only when this stand alone file is executed as '$python <file.py>'
 # when this file is imported into another file, main() is NOT called
 
-# Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() place
-INPUT_SYMBOL = ''
-OUTPUT_SYMBOL = ''
-
-input_val_g = []
-output_val_g = []
-
 if __name__ == '__main__':
+    input_val_g = []
+    output_val_g = []
     main()
 
