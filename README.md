@@ -1,5 +1,11 @@
 # ddcBot doc
 
+pre-req instals
+```
+Install anconda where  Python3 is part of the insgtallation
+add  /anaconda3/bin to PATH as siad in other README file
+```
+
 How to use
 The easy way is to clone it and use it via a virtualenv:
 ```
@@ -13,6 +19,7 @@ install virtualenv [as said here](https://stackoverflow.com/questions/31133050/v
 $pip install virtualenv
 
 # then execute following steps
+
 $ virtualenv env
 $ . env/bin/activate
 $ pip install Flask
