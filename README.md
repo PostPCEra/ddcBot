@@ -27,6 +27,8 @@ $ pip install Flask
 
 Run the server:
 ```
+$mkdir log    # to hold log files
+
 $ python server_ddcBot*.py
 ```
 Then visite with your web browser the URL: http://127.0.0.1:5000.
