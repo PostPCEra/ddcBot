@@ -3,7 +3,7 @@ from runcode import runcode
 app = Flask(__name__)
 
 
-default_py_code = """import sys
+excode0 = """import sys
 import os
 
 a = [ 1, 3, 4]
@@ -12,10 +12,47 @@ b = [ 2, 6, 8]
 # @input = a ; @output = b
 """
 
+excode1 = """import sys
+import os
+
+height = [2, 6, 7] 
+weight = [10, 30, 35]
+
+# @input = height ; @output = weight
+"""
+
+excode2 = """import sys
+import os
+
+cat_in = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  
+cat_out = [5, 6, 'fizz', 8, 'buzz', 'fizz', 11, 12, 'fizz','buzz']
+
+# @input = cat_in ; @output = cat_out
+"""
+
+excode3 = """import sys
+import os
+
+cat_in = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] 
+cat_out = [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14]
+
+# @input = cat_in ; @output = cat_out
+"""
+
+excode4 = """import sys
+import os
+
+seq_in = [2, 6,12, 13,15, 19, 20, 58] 
+seq_out = ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult']
+
+# @input = seq_in ; @output = seq_out
+"""
+
 default_rows = "15"
 default_cols = "60"
 
 @app.route("/")
+@app.route("/examples")
 @app.route("/py")
 @app.route("/runpy", methods=['POST', 'GET'])
 def runpy():
@@ -33,7 +70,11 @@ def runpy():
         elif submit_type == 'Launch':
             pass  # do nothing
     else:
-        code = default_py_code
+        num = request.args.get('ex')
+        if num is None:
+            num = '0'
+
+        code = eval('excode' + num)
         resrun = 'No result!'
         rescompil = "No compilation for Python"
 

@@ -12,7 +12,7 @@ import logging
 
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
-# 1. Logging : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
+# DONE : 1. Logging : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 # 2. Refactor code
 #
 # Features :
@@ -56,6 +56,7 @@ def setup_logger(filename="log-4-ddcBot.log"):
 
 
 # for webserver, the log is written in /ddcBot dir , local python execution is created in  /ddcBot/running  dir
+# Logging Tutorial : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 log = setup_logger()
 
 # ------------------- find all relationships -------------------------
@@ -190,7 +191,7 @@ def get_category_code(cat_lst, edge_values):
         segment = segment + tmp
         idx = idx + 1
 
-    tmp = "\n{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
+    tmp = "\n\t{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
 
     code = code + segment + tmp
     # print(code)
@@ -218,7 +219,7 @@ def get_sequence_code(dict1, delta):
 
     tmp2 = "" if delta == 0 else " + {}".format(delta)
     tmp = "else:\n\t\t" + \
-          "element = n {}\n\n".format(tmp2) + \
+          "element = n {}\n\n\t".format(tmp2) + \
             "{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
 
     code = code + segment + tmp
@@ -235,7 +236,7 @@ def generate_code(categories, cat_relationships):
         if cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_ARITHMETIC_SEQUENCE:
             varname, value, oper = ("delta", output[0]-input[0], "+")
         else:
-            varname, value, oper = ("ratio", output[0]/input[0], "*")
+            varname, value, oper = ("ratio", int(output[0]/input[0]), "*")
 
         code = get_loop_code(varname, value, oper)
         return code
@@ -271,7 +272,7 @@ def generate_code(categories, cat_relationships):
             return " -------- NOT Ordered "
 
         log.debug(cat_sorted)
-        code = get_category_code(cat_sorted, edge_values)
+        code = get_category_code(cat_sorted, edge_values)  # category is Fizz Buzz
         return code
 
     else:
@@ -288,7 +289,7 @@ def generate_code(categories, cat_relationships):
         delta = eachcat_with_onevalue.pop(CAT_TYPE_ALLOTHER, None) # save value and remove key
         log.debug(eachcat_with_onevalue)
 
-        code = get_sequence_code(eachcat_with_onevalue, delta)
+        code = get_sequence_code(eachcat_with_onevalue, delta) # sequence  'child', 'teen' based on age
         return code
 
 # ------------------- process for relationship -------------------------
