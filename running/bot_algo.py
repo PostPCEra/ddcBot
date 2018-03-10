@@ -8,10 +8,11 @@ Created on Fri Feb 23 18:55:45 2018
 @author:
 """
 import functools
+import logging
 
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
-# 1. Logging : http://docs.python-guide.org/en/latest/writing/logging/
+# 1. Logging : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 # 2. Refactor code
 #
 # Features :
@@ -34,6 +35,19 @@ REL_TYPE_UNKNOWN = 'unknown'
 # Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() functions
 INPUT_SYMBOL = ''
 OUTPUT_SYMBOL = ''
+
+# ------------------- Logging -------------------------
+#
+# -------------------  *****************  ------------------------
+logging.basicConfig(
+    filename="log-4-ddcBot.log",
+    level=logging.DEBUG,
+    format="%(levelname)s:%(message)s"
+    # level=logging.INFO,
+    # format="%(asctime)s:%(levelname)s:%(message)s"
+    )
+
+log = logging.getLogger("ddcB")
 
 # ------------------- find all relationships -------------------------
 #
@@ -119,7 +133,7 @@ def extract_categories(zip_inout, output_categories):
     for x in output_categories:
         categories[x] = []
 
-    print(categories)
+    log.info(categories)
 
     zlist = sorted(zip_inout, key=lambda p: p[0])  # sorting  based on the values of x in each (x,y) pair
     for pair in zlist:
@@ -205,10 +219,11 @@ def get_sequence_code(dict1, delta):
 
 def generate_code(categories, cat_relationships):
 
-    input_symbol, output_symbol = 'a', 'b'
-
     length = len(categories)
+    log.debug("  num. of Categories in Input data: {}\n:".format(str(length)))
+
     if length == 1:
+        log.debug("  Input data relationship: {}\n:".format(cat_relationships[CAT_TYPE_ALLOTHER]))
         input, output = categories[CAT_TYPE_ALLOTHER]  # input/output values
         if cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_ARITHMETIC_SEQUENCE:
             varname, value, oper = ("delta", output[0]-input[0], "+")
@@ -216,11 +231,11 @@ def generate_code(categories, cat_relationships):
             varname, value, oper = ("ratio", output[0]/input[0], "*")
 
         code = get_loop_code(varname, value, oper)
-        #print(code)
+        log.info(code)
         return code
 
     elif REL_TYPE_UNKNOWN in cat_relationships.values():
-        print('********** Unknown relationship')
+        log.debug("********** Unknown relationship in the Input data, let's find out")
 
         cat_lst = list(categories.items())
         #print(cat_lst)
@@ -249,9 +264,12 @@ def generate_code(categories, cat_relationships):
         print(edge_values)
 
         if not ordered_category:
+            log.error("  The Output Categories do not follow Ordered sequence ..\n")
             return " -------- NOT Ordered "
 
         code = get_category_code(cat_sorted, edge_values)
+        log.debug(cat_sorted)
+        log.info(code)
         return code
 
     else:
@@ -266,9 +284,10 @@ def generate_code(categories, cat_relationships):
 
 
         delta = eachcat_with_onevalue.pop(CAT_TYPE_ALLOTHER, None) # save value and remove key
-        print(eachcat_with_onevalue)
+        log.debug(eachcat_with_onevalue)
 
         code = get_sequence_code(eachcat_with_onevalue, delta)
+        log.info(code)
         return code
 
 # ------------------- process for relationship -------------------------
@@ -277,7 +296,6 @@ def generate_code(categories, cat_relationships):
 def process_for_relationships(input_l, output_l):
     freq_two_or_more = [x for x in output_l if output_l.count(x) > 1]
     output_categories = set(freq_two_or_more)  # removes duplicates
-    print(output_categories)
 
     if len(output_categories) == 0:
         categories = {CAT_TYPE_ALLOTHER: (input_l, output_l)}  # dictionary to hold all distinct category items
@@ -285,12 +303,13 @@ def process_for_relationships(input_l, output_l):
         zip_inout = zip(input_l, output_l)
         categories = extract_categories(zip_inout, output_categories)
 
-    print(categories)
+    log.debug('\n')
+    log.debug(categories)
 
     cat_relationships = find_all_relationships(categories)
 
     code = generate_code(categories, cat_relationships)
-    print(code)
+    #print(code)
 
 
 def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value):
@@ -303,11 +322,11 @@ def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_valu
     input_as_value =  in_as_value
     output_as_value = out_as_value
 
-    print('------------- passed input/output values   ----------------')
-    print(input_as_symbol)
-    print(output_as_symbol)
-    print(input_as_value)
-    print(output_as_value)
+    log.debug('\n------------- passed input/output values   ----------------')
+    log.debug(input_as_symbol)
+    log.debug(output_as_symbol)
+    log.debug(input_as_value)
+    log.debug(output_as_value)
 
     code = process_for_relationships(input_as_value, output_as_value)   # pass values of variable
     return code

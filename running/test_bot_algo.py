@@ -17,7 +17,7 @@ def main():
                  ]
 
     #for pair in test_suite[3:4]:  # by simpy changing index, we can selectively feed the test cases we like
-    for pair in test_suite[:4]:
+    for pair in test_suite[:5]:
 
         input_as_value, output_as_value = pair
         code = main_entry_point('input_dummy_g', 'output_dummy_g', input_as_value, output_as_value)
