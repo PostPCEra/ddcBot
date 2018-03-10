@@ -31,9 +31,13 @@ class RunPyCode(object):
         output_var = elm[1].split('=')[-1]
 
         input, output = input_var.strip(), output_var.strip()
+
         # first 2 params as symbols '{}', next 2 as value
-        code_str = "main_entry_point('{}' , '{}', {}, {})\n".format(input, output, input, output)
-        return code_str
+        code_str = "\n\n# --------------------- main program code --------------------------\n" + \
+            "code = main_entry_point('{}' , '{}', {}, {})\n".format(input, output, input, output) + \
+            "print(code)\n\n"    # print() will sends to stadout which in tern get back to browser
+
+        return code_str  # this code_str is written into a.out file , see contents
 
     def run_py_code(self, submit_type, code=None):
         filename = "./running/a.py"

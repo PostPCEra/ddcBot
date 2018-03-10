@@ -39,15 +39,24 @@ OUTPUT_SYMBOL = ''
 # ------------------- Logging -------------------------
 #
 # -------------------  *****************  ------------------------
-logging.basicConfig(
-    filename="log-4-ddcBot.log",
-    level=logging.DEBUG,
-    format="%(levelname)s:%(message)s"
-    # level=logging.INFO,
-    # format="%(asctime)s:%(levelname)s:%(message)s"
-    )
 
-log = logging.getLogger("ddcB")
+# https://stackoverflow.com/questions/11232230/logging-to-two-files-with-different-settings
+def setup_logger(filename="log-4-ddcBot.log"):
+
+    logging.basicConfig(
+        filename=filename,
+        level=logging.DEBUG,
+        format="%(levelname)s:%(message)s"
+        # level=logging.INFO,
+        # format="%(asctime)s:%(levelname)s:%(message)s"
+        )
+
+    logger = logging.getLogger("ddcB")
+    return logger
+
+
+# for webserver, the log is written in /ddcBot dir , local python execution is created in  /ddcBot/running  dir
+log = setup_logger()
 
 # ------------------- find all relationships -------------------------
 #
@@ -120,7 +129,7 @@ def find_all_relationships(categories):
             input_l = value
             cat_realtionships[key] = find_relation_among_elements(input_l)
 
-    print(cat_realtionships)
+    log.debug(cat_realtionships)
     return cat_realtionships
 
 
@@ -193,7 +202,6 @@ def get_sequence_code(dict1, delta):
 
     # convert dictionary to tuple list, then sort. dictonary sorts are hard and unreliable .
     tuple_lst = list(dict1.items())
-    print(tuple_lst)
     tuple_lst.sort(key=itemgetter(0))
     tuple_lst.sort(key=itemgetter(1), reverse=True)
 
@@ -214,7 +222,6 @@ def get_sequence_code(dict1, delta):
             "{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
 
     code = code + segment + tmp
-    print(code)
     return code
 
 def generate_code(categories, cat_relationships):
@@ -231,7 +238,6 @@ def generate_code(categories, cat_relationships):
             varname, value, oper = ("ratio", output[0]/input[0], "*")
 
         code = get_loop_code(varname, value, oper)
-        log.info(code)
         return code
 
     elif REL_TYPE_UNKNOWN in cat_relationships.values():
@@ -244,14 +250,11 @@ def generate_code(categories, cat_relationships):
             return val1[0] - val2[0]
 
         cat_sorted = sorted(cat_lst, key=functools.cmp_to_key(docompare))
-        print(cat_sorted)
-
 
         first_item = cat_sorted[0][1]
         small = first_item[0]
         edge_values = [first_item[-1]]
         ordered_category = True
-
 
         for _, item in cat_sorted[1:]:
             if small < item[0]:
@@ -261,15 +264,14 @@ def generate_code(categories, cat_relationships):
                 ordered_category = False
                 break
 
-        print(edge_values)
+        log.info(edge_values)
 
         if not ordered_category:
             log.error("  The Output Categories do not follow Ordered sequence ..\n")
             return " -------- NOT Ordered "
 
-        code = get_category_code(cat_sorted, edge_values)
         log.debug(cat_sorted)
-        log.info(code)
+        code = get_category_code(cat_sorted, edge_values)
         return code
 
     else:
@@ -287,7 +289,6 @@ def generate_code(categories, cat_relationships):
         log.debug(eachcat_with_onevalue)
 
         code = get_sequence_code(eachcat_with_onevalue, delta)
-        log.info(code)
         return code
 
 # ------------------- process for relationship -------------------------
@@ -309,7 +310,8 @@ def process_for_relationships(input_l, output_l):
     cat_relationships = find_all_relationships(categories)
 
     code = generate_code(categories, cat_relationships)
-    #print(code)
+    log.info(code)
+    return code
 
 
 def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value):
@@ -321,6 +323,12 @@ def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_valu
     #input_as_value = eval(input_as_symbol)  # not working for stand alone , so levae it
     input_as_value =  in_as_value
     output_as_value = out_as_value
+
+    # webserver log is written in  /ddcBot dir , local python execution is in /running dir
+    # so, we do not need the code below .......
+    #if input_as_symbol == 'input_dummy_g':
+    #    global log  #  reference  it as we rewrite the gloabl var log
+    #    log = setup_logger("local-logfile.log")
 
     log.debug('\n------------- passed input/output values   ----------------')
     log.debug(input_as_symbol)
