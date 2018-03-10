@@ -41,7 +41,7 @@ OUTPUT_SYMBOL = ''
 # -------------------  *****************  ------------------------
 
 # https://stackoverflow.com/questions/11232230/logging-to-two-files-with-different-settings
-def setup_logger(filename="log-4-ddcBot.log"):
+def setup_logger(filename="/Users/padma/ddcBot/log/log-4-ddcBot.log"):
 
     logging.basicConfig(
         filename=filename,
@@ -54,8 +54,6 @@ def setup_logger(filename="log-4-ddcBot.log"):
     logger = logging.getLogger("ddcB")
     return logger
 
-
-# for webserver, the log is written in /ddcBot dir , local python execution is created in  /ddcBot/running  dir
 # Logging Tutorial : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 log = setup_logger()
 
@@ -324,12 +322,6 @@ def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_valu
     #input_as_value = eval(input_as_symbol)  # not working for stand alone , so levae it
     input_as_value =  in_as_value
     output_as_value = out_as_value
-
-    # webserver log is written in  /ddcBot dir , local python execution is in /running dir
-    # so, we do not need the code below .......
-    #if input_as_symbol == 'input_dummy_g':
-    #    global log  #  reference  it as we rewrite the gloabl var log
-    #    log = setup_logger("local-logfile.log")
 
     log.debug('\n------------- passed input/output values   ----------------')
     log.debug(input_as_symbol)

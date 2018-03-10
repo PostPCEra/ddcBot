@@ -9,7 +9,7 @@ class RunPyCode(object):
         if not os.path.exists('running'):
             os.mkdir('running')
 
-    def _run_py_prog(self, cmd="a.py"):
+    def _run_py_prog(self, cmd="_generatedcode.py"):
         cmd = [sys.executable, cmd]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result = p.wait()
@@ -40,7 +40,7 @@ class RunPyCode(object):
         return code_str  # this code_str is written into a.out file , see contents
 
     def run_py_code(self, submit_type, code=None):
-        filename = "./running/a.py"
+        filename = "./running/_generatedcode.py"
         if not code:
             code = self.code
 
