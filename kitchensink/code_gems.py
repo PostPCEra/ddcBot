@@ -20,6 +20,14 @@ Created on Fri Feb 23 18:55:45 2018
 # Multi-cursors : place a cursor, hold <ALT Option> key and 'mouse click' all other places . Then start editing
 # Best part : all these edit are  can be UNDO or REDO  under Edit menu ... cool
 
+# MAC Keyboard keys : which symbols corresponds to which key board ..
+# ^ (caret) key : this is <CTRL> or <Control> key
+# --\__  key : ths is <alt option> key
+
+# Methods navigation :
+# on editor ,in the scroll bar Gutter , the horizantal lines each represent a Method, so click on those to go to methods
+#
+
 
 
 # https://docs.python.org/2/library/timeit.html
@@ -103,6 +111,37 @@ from pprint import pprint as pp
 y = groupby(x, itemgetter(1))  # Now y is an iterator containing tuples of (element, item iterator).
 pp([y for y in x if y[3] == '2somename'])
 
+
+# --------------  Date & Time functions ------------------------
+# https://pymotw.com/2/datetime/
+import datetime
+
+d1 = datetime.date(2008, 3, 12)
+d2 = d1.replace(year=2009)  # replace any part
+
+today = datetime.date.today()
+today.year
+today.month
+
+# 1. parsing parts : getattr()
+dt = datetime.datetime.now()
+for attr in [ 'year', 'month', 'day', 'hour', 'minute', 'second', 'microsecond']:
+    print (attr, ':', getattr(dt, attr))
+
+# 2. Datetime arithmetic : timedelta()
+oneweek = datetime.timedelta(weeks=1)  # give as number as one week worth of time
+next_week = today + oneweek
+prev_week = today - oneweek
+
+# 3. Formattings between String & Date
+format = "%a %b %d %H:%M:%S %Y"
+
+s1  = today.strftime(format)  # date -> string
+
+d = datetime.datetime.strptime(s, format)  # string -> date : string Parse
+s2 = d.strftime(format)
+
+s1 == s2
 
 # --------------  Global Variable ------------------------
 # https://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them?rq=1
