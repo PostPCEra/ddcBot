@@ -32,6 +32,13 @@ REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
 REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
 REL_TYPE_UNKNOWN = 'unknown'
 
+# Error codes
+ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
+ERROR_LIST = [ ERROR_NOT_ARTHIMETIC_GEOMETRIC,
+
+    1
+]
+
 # Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() functions
 INPUT_SYMBOL = ''
 OUTPUT_SYMBOL = ''
@@ -227,16 +234,26 @@ def generate_code(categories, cat_relationships):
 
     length = len(categories)
     log.debug("  num. of Categories in Input data: {}\n:".format(str(length)))
+    error_state = False
 
     if length == 1:
         log.debug("  Input data relationship: {}\n:".format(cat_relationships[CAT_TYPE_ALLOTHER]))
         input, output = categories[CAT_TYPE_ALLOTHER]  # input/output values
         if cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_ARITHMETIC_SEQUENCE:
             varname, value, oper = ("delta", output[0]-input[0], "+")
+        elif cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_GEOMETRIC_SEQUENCE:
+            ratio = output[0]/input[0]
+            if int(ratio) == ratio:
+                ratio = int(ratio)
+            varname, value, oper = ("ratio", ratio, "*")
         else:
-            varname, value, oper = ("ratio", int(output[0]/input[0]), "*")
+            error_state = True
 
-        code = get_loop_code(varname, value, oper)
+        if error_state:
+            code = ERROR_NOT_ARTHIMETIC_GEOMETRIC
+        else:
+            code = get_loop_code(varname, value, oper)
+
         return code
 
     elif REL_TYPE_UNKNOWN in cat_relationships.values():

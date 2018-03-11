@@ -2,6 +2,10 @@ import subprocess
 import sys
 import os
 
+# Error codes
+ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
+ERROR_LIST = [ ERROR_NOT_ARTHIMETIC_GEOMETRIC, 1 ]
+
 class RunPyCode(object):
     
     def __init__(self, code=None):
@@ -55,5 +59,12 @@ class RunPyCode(object):
                 f.write(main_call_code)
 
         self._run_py_prog(filename)
-        return self.stderr, self.stdout
+
+        std_err, std_out = self.stderr, self.stdout
+        #std_out = ERROR_NOT_ARTHIMETIC_GEOMETRIC
+        if std_out in ERROR_LIST:
+            std_err = std_out
+            std_out = ''
+
+        return std_err, std_out
 
