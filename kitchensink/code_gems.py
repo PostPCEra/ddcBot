@@ -112,6 +112,31 @@ y = groupby(x, itemgetter(1))  # Now y is an iterator containing tuples of (elem
 pp([y for y in x if y[3] == '2somename'])
 
 
+# --------------  Pathlib ------------------------
+# http://pbpython.com/pathlib-intro.html
+# One of python’s strengths is that it continues to develop and grow over time. The pathlib module is a prime example
+# of the care that the maintainers take to build new capabilities that improve the overall capabilities of python
+
+from pathlib import Path
+
+in_file_1 = Path.cwd() / "in" / "input.xlsx"
+out_file_1 = Path.cwd() / "out" / "output.xlsx"
+
+# Finally, there is one other trick you can use to build up a path with multiple directories:
+parts = ["in", "input.xlsx"]
+in_file_3 = Path.cwd().joinpath(*parts)
+
+dir_to_scan = "/media/chris/KINGSTON/data_analysis"
+p = Path(dir_to_scan)
+p.is_dir()  # True
+p.is_file()  # False
+p.parts   # ('/', 'media', 'chris', 'KINGSTON', 'data_analysis')
+p.absolute()  # PosixPath('/media/chris/KINGSTON/data_analysis')
+
+# See following 2 sections , on the above blog post for good examples
+# Combining Pathlib and Pandas , Walking Directories
+
+
 # --------------  Date & Time functions ------------------------
 # https://pymotw.com/2/datetime/
 import datetime
