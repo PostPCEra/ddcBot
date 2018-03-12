@@ -23,6 +23,7 @@ import datetime
 #
 # Data structures : Lists, Dictionary, tuple,
 #    @input = lst, 3 ; @output = lst2  ( here 3 indicates check for filed 4 ( 0 based) for clue on how to Derive Output
+# https://stackoverflow.com/questions/35490420/how-to-check-type-of-object-in-python
 # Date/Time simple input/output conversions
 #    https://pymotw.com/2/datetime/
 # Filter : student records whose grade below 60%
@@ -70,34 +71,21 @@ log = setup_logger()
 #
 # -------------------  *****************  ------------------------
 
-def find_relation_input_to_output(input_l, output_l):
+def find_relation_input_to_output(input, output):
 
-    lst = input_l
-    lst2 = output_l
-
-    delta = lst2[0] - lst[0]
-    in_relation = True
-    for ind in range(len(lst)):
-        if not (lst2[ind] - lst[ind] == delta):
-            in_relation = False
-            break
-
-    if in_relation:
+    # no try: catch: required as we are going to pre check to make sure all input/out is either int or float numbers
+    diff = [output[i] - input[i] for i, _ in enumerate(input)]
+    if len(set(diff)) == 1:
         return REL_TYPE_ARITHMETIC_SEQUENCE
+        # return REL_TYPE_ARITHMETIC_SEQUENCE, diff[0]
 
-    multiple = lst2[0] / lst[0]
-    in_relation = True
-    for ind in range(len(lst)):
-        if not (lst2[ind] / lst[ind] == multiple):
-            in_relation = False
-            break
-
-    if in_relation:
+    multiple = [output[i] / input[i] for i, _ in enumerate(input)]
+    if len(set(multiple)) == 1:
         return REL_TYPE_GEOMETRIC_SEQUENCE
-    else:
-        return REL_TYPE_UNKNOWN
+        # return REL_TYPE_GEOMETRIC_SEQUENCE, multiple[0]
 
-
+    # if not any one of above
+    return REL_TYPE_UNKNOWN
 
 def find_relation_among_elements(input_l):
 
