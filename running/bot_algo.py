@@ -74,8 +74,9 @@ log = setup_logger()
 def find_relation_input_to_output(input, output):
 
     # no try: catch: required as we are going to pre check to make sure all input/out is either int or float numbers
+
     diff = [output[i] - input[i] for i in range(len(input))]
-    if len(set(diff)) == 1:
+    if len(set(diff)) == 1:   # length will be 1 if all elements are same, because set() returns unique elements
         return REL_TYPE_ARITHMETIC_SEQUENCE
         # return REL_TYPE_ARITHMETIC_SEQUENCE, diff[0]
 
@@ -87,6 +88,7 @@ def find_relation_input_to_output(input, output):
     # if not any one of above
     return REL_TYPE_UNKNOWN
 
+# ------------------- find_relation_among_elements -------------------------
 def find_relation_among_elements(input):
 
     diff = [input[i+1] - input[i] for i in range(len(input) - 1)]
@@ -100,6 +102,7 @@ def find_relation_among_elements(input):
     # if not any one of above
     return REL_TYPE_UNKNOWN
 
+# ------------------- find_all_relationships -------------------------
 def find_all_relationships(categories):
 
     cat_realtionships = {}  # init
