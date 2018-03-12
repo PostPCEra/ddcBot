@@ -74,12 +74,12 @@ log = setup_logger()
 def find_relation_input_to_output(input, output):
 
     # no try: catch: required as we are going to pre check to make sure all input/out is either int or float numbers
-    diff = [output[i] - input[i] for i, _ in enumerate(input)]
+    diff = [output[i] - input[i] for i in range(len(input))]
     if len(set(diff)) == 1:
         return REL_TYPE_ARITHMETIC_SEQUENCE
         # return REL_TYPE_ARITHMETIC_SEQUENCE, diff[0]
 
-    multiple = [output[i] / input[i] for i, _ in enumerate(input)]
+    multiple = [output[i] / input[i] for i in range(len(input))]
     if len(set(multiple)) == 1:
         return REL_TYPE_GEOMETRIC_SEQUENCE
         # return REL_TYPE_GEOMETRIC_SEQUENCE, multiple[0]
@@ -87,32 +87,18 @@ def find_relation_input_to_output(input, output):
     # if not any one of above
     return REL_TYPE_UNKNOWN
 
-def find_relation_among_elements(input_l):
+def find_relation_among_elements(input):
 
-    lst = input_l
-
-    delta = lst[1] - lst[0]
-    in_relation = True
-    for ind in range(len(lst) - 1):
-        if not (lst[ind + 1] - lst[ind] == delta):
-            in_relation = False
-            break
-
-    if in_relation:
+    diff = [input[i+1] - input[i] for i in range(len(input) - 1)]
+    if len(set(diff)) == 1:
         return REL_TYPE_ARITHMETIC_SEQUENCE
 
-    multiple = lst[1] / lst[0]
-    in_relation = True
-    for ind in range(len(lst) - 1):
-        if not (lst[ind + 1] / lst[ind] == multiple):
-            in_relation = False
-            break
-
-    if in_relation:
+    multiple = [input[i+1] / input[i] for i in range(len(input) - 1)]
+    if len(set(multiple)) == 1:
         return REL_TYPE_GEOMETRIC_SEQUENCE
-    else:
-        return REL_TYPE_UNKNOWN
 
+    # if not any one of above
+    return REL_TYPE_UNKNOWN
 
 def find_all_relationships(categories):
 
