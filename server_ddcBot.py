@@ -48,6 +48,15 @@ seq_out = ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult']
 # @input = seq_in ; @output = seq_out
 """
 
+excode5 = """import sys
+import os
+
+date1 = '2018-01-15'
+date2 = '2018-04-18'
+
+# @input = date1 ; @output = date2
+"""
+
 default_rows = "15"
 default_cols = "60"
 
