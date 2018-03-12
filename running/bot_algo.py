@@ -9,6 +9,7 @@ Created on Fri Feb 23 18:55:45 2018
 """
 import functools
 import logging
+import datetime
 
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
@@ -23,6 +24,7 @@ import logging
 # Data structures : Lists, Dictionary, tuple,
 #    @input = lst, 3 ; @output = lst2  ( here 3 indicates check for filed 4 ( 0 based) for clue on how to Derive Output
 # Date/Time simple input/output conversions
+#    https://pymotw.com/2/datetime/
 # Filter : student records whose grade below 60%
 #  ---------- TODO -----------------------------
 
@@ -172,6 +174,13 @@ def extract_categories(zip_inout, output_categories):
 # ------------------- generate CODE  -------------------------
 #
 
+def gen_dates_code(delta, formatstr):
+    code = "import datetime\n" + \
+            "dt = datetime.datetime.strptime({}, '{}')\n".format(INPUT_SYMBOL, formatstr) + \
+           "delta = {}  # this is time delta that needs to be added \n".format(delta) + \
+           "{} = dt + delta \n".format(OUTPUT_SYMBOL)
+    return code
+
 def get_loop_code(varname, value, oper):
 
     code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
@@ -307,10 +316,36 @@ def generate_code(categories, cat_relationships):
         code = get_sequence_code(eachcat_with_onevalue, delta) # sequence  'child', 'teen' based on age
         return code
 
+
+def process_for_dates(dtstr1, dtstr2):
+
+    formatstr = ''
+    def string_to_dt(dtstr):
+        format1, format2 = "%Y-%m-%d", "%m-%d-%Y"
+        try:
+            dt = datetime.datetime.strptime(dtstr, format1)  # if exception , try format2
+            formatstr = format1
+        except ValueError:
+            dt = datetime.datetime.strptime(dtstr, format2)
+            formatstr = format2
+
+        return dt, formatstr
+
+    d2, formatstr = string_to_dt(dtstr2)
+    d1, _      = string_to_dt(dtstr1)
+    delta = d2 - d1
+    code = gen_dates_code(delta,formatstr)
+    return code
+
 # ------------------- process for relationship -------------------------
 #
 # -------------------  *****************  ---------------------------
 def process_for_relationships(input_l, output_l):
+
+    if isinstance(input_l, str):
+        code = process_for_dates(input_l, output_l)
+        return code
+
     freq_two_or_more = [x for x in output_l if output_l.count(x) > 1]
     output_categories = set(freq_two_or_more)  # removes duplicates
 

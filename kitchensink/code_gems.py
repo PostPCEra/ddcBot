@@ -54,13 +54,13 @@ print(slist)  # [(3, 'a'), (9, 'b'), (2, 'c'), (24, 'd'), (1, 'e')]
 
 # https://stackoverflow.com/questions/14466068/sort-a-list-of-tuples-by-second-value-reverse-true-and-then-by-key-reverse-fal
 from operator import itemgetter
-d.sort(key=itemgetter(0))
-d.sort(key=itemgetter(1), reverse=True)
+#d.sort(key=itemgetter(0))
+#d.sort(key=itemgetter(1), reverse=True)
 
 # Dictionary List search : https://stackoverflow.com/questions/8653516/python-list-of-dictionaries-search
 people = [{'name': 'Tom', 'age': 10}, {'name': 'Mark', 'age': 5}, {'name': 'Pam', 'age': 7}]
-result = [ row for row in people if people['name'] == 'Pam']
-result = [ row for row in people if people.get('name2222', '') == 'Pam'] # greaceful no execption if 'name2222' don't exists
+result = [ row for row in people if row['name'] == 'Pam']
+result = [ row for row in people if row.get('name2222', '') == 'Pam'] # greaceful no execption if 'name2222' don't exists
 if len(result):
     print(result[0])
 
@@ -163,10 +163,21 @@ format = "%a %b %d %H:%M:%S %Y"
 
 s1  = today.strftime(format)  # date -> string
 
-d = datetime.datetime.strptime(s, format)  # string -> date : string Parse
+d = datetime.datetime.strptime(s1, format)  # string -> date : string Parse
 s2 = d.strftime(format)
 
 s1 == s2
+
+def first_sunday_on_or_after(dt):
+    days_to_go = 6 - dt.weekday()
+    if days_to_go:
+        dt += timedelta(days_to_go)
+    return dt
+
+
+# 3 rd Monday on or after dt , here n = 3,  x=0 ( monday )
+def nth_xday_on_or_after(dt, n, x ):
+    pass
 
 # --------------  Global Variable ------------------------
 # https://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them?rq=1
@@ -206,3 +217,40 @@ if len(lis) >2:
     for x in lis[2:]:    # now iterate over the list starting from the 3rd element
         result = gcd(result,x)
 print(result)
+
+# --------------------------    ---------------------------------------------------
+# Date logic
+# https://stackoverflow.com/questions/35490420/how-to-check-type-of-object-in-python
+
+# https://pymotw.com/2/datetime/
+
+def process_dates(dtstr1, dtstr2):
+
+    formatstr = ''
+    def string_to_dt(dtstr):
+        format1, format2 = "%Y-%m-%d", "%m-%d-%Y"
+        try:
+            dt = datetime.datetime.strptime(dtstr, format1)  # if exception , try format2
+            formatstr = format1
+        except ValueError:
+            dt = datetime.datetime.strptime(dtstr, format2)
+            formatstr = format2
+
+        return dt, formatstr
+
+    d2, formatstr = string_to_dt(dtstr2)
+    d1, _      = string_to_dt(dtstr1)
+    delta = d2 - d1
+    print(delta.days, delta.seconds)
+    dd = d1 + delta
+    print(dd)
+    print(formatstr)
+
+
+import datetime
+#dstr1 = '01-15-2018'
+#dstr2 = '04-18-2018'
+dstr1 = '2018-01-15'
+dstr2 = '2018-04-18'
+
+process_dates(dstr1, dstr2)

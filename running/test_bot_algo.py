@@ -6,8 +6,9 @@ from bot_algo import *
 # --------------------------------------
 def main():
 
-    test_suite = [ { 'case':'1.0 Arthimatic Sequence', 'data': ([1, 5, 8], [6, 10, 13]) },
-    {'case': '1.1 Arth negative data', 'data': ([1, 5, 8], [-7, -3, 0])},
+    test_suite = [ { 'case':'.0 Dates', 'data': ('2018-01-15', '2018-04-18') },
+    { 'case':'1.0 Arthimatic Sequence', 'data': ([1, 5, 8], [6, 10, 13]) },
+    {'case': '1.1 Arth negative data', 'data': ([1, 5, 8], [-7, -3, 10])},
     {'case': '1.2 Arth one missing', 'data': ([2, 6, 7], [8, 12, 9])},
 
     {'case': '2.0 Geometric Sequence', 'data': ([2, 6, 7], [10, 30, 35])},
@@ -28,7 +29,7 @@ def main():
     ]
 
     #for pair in test_suite[3:4]:  # by simpy changing index, we can selectively feed the test cases we like
-    for row in test_suite[6:7]:
+    for row in test_suite[:2]:
 
         log.debug('------------{}\n'.format(row['case']))
         input_as_value, output_as_value = row['data']
@@ -38,7 +39,7 @@ def main():
 # -------------------  main -------------------
 #
 code = main()
-
+a= 4
 #import os
 #os.system('chmod 777 log-4*')
 
