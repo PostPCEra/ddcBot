@@ -10,6 +10,7 @@ Created on Fri Feb 23 18:55:45 2018
 import functools
 import logging
 import datetime
+import math
 
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
@@ -33,7 +34,10 @@ import datetime
 CAT_TYPE_ALLOTHER = 'allother'  # Category type
 REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
 REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
+REL_TYPE_EXPONENTIAL_SEQUENCE = 'exponential_sequence'
+REL_TYPE_LOGARITHMIC_SEQUENCE = 'logarithmic_sequence'
 REL_TYPE_UNKNOWN = 'unknown'
+PASS_VALUE1 = ''
 
 # Error codes
 ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
@@ -67,13 +71,15 @@ def setup_logger(filename="/Users/padma/ddcBot/log/log-4-ddcBot.log"):
 # Logging Tutorial : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 log = setup_logger()
 
-# ------------------- find all relationships -------------------------
+# ------------------- find all relationships -------------------------------------------
 #
-# -------------------  *****************  ------------------------
+# The following group of functions determine the relationship between Input & Ouput Lists
+#
+# -------------------  *****************  ----------------------------------------------
 
 def find_relation_input_to_output(input, output):
 
-    # no try: catch: required as we are going to pre check to make sure all input/out is either int or float numbers
+    # no try: catch: required as we are going to pre check to make sure all input/out is either int/float numbers
 
     diff = [output[i] - input[i] for i in range(len(input))]
     if len(set(diff)) == 1:   # length will be 1 if all elements are same, because set() returns unique elements
@@ -84,6 +90,23 @@ def find_relation_input_to_output(input, output):
     if len(set(multiple)) == 1:
         return REL_TYPE_GEOMETRIC_SEQUENCE
         # return REL_TYPE_GEOMETRIC_SEQUENCE, multiple[0]
+
+    exponential = [round(math.log10(output[i]) / math.log10(input[i]), 3) for i in range(len(input))]
+    log.debug(exponential)
+    log.debug(exponential[0])
+    if len(set(exponential)) == 1:
+        global PASS_VALUE1
+        PASS_VALUE1 = exponential[0]   # set to global value
+        log.debug(PASS_VALUE1)
+        if exponential[0] > 1:
+            return REL_TYPE_EXPONENTIAL_SEQUENCE
+            # if above round() for 2 places same for all elements, then it is integer number
+            # return REL_TYPE_GEOMETRIC_SEQUENCE, round(exponential[0])
+
+        else:
+            return REL_TYPE_LOGARITHMIC_SEQUENCE
+            # math.pow(32, 1/5)
+
 
     # if not any one of above
     return REL_TYPE_UNKNOWN
@@ -166,6 +189,13 @@ def get_loop_code(varname, value, oper):
            "{}.append({} {} x)\n\n".format(OUTPUT_SYMBOL, varname, oper)
     return code
 
+def get_explog_code(relationship_type):
+
+    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
+           "for x in {}:\n\t".format(INPUT_SYMBOL) + \
+           "{}.append(round(math.pow(x, {})))\n\n".format(OUTPUT_SYMBOL, PASS_VALUE1)
+    return code
+
 def get_category_code(cat_lst, edge_values):
 
     code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
@@ -225,18 +255,27 @@ def generate_code(categories, cat_relationships):
     if length == 1:
         log.debug("  Input data relationship: {}\n:".format(cat_relationships[CAT_TYPE_ALLOTHER]))
         input, output = categories[CAT_TYPE_ALLOTHER]  # input/output values
-        if cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_ARITHMETIC_SEQUENCE:
+
+        relationship_type  = cat_relationships[CAT_TYPE_ALLOTHER]
+        if relationship_type == REL_TYPE_ARITHMETIC_SEQUENCE:
             varname, value, oper = ("delta", output[0]-input[0], "+")
-        elif cat_relationships[CAT_TYPE_ALLOTHER] == REL_TYPE_GEOMETRIC_SEQUENCE:
+
+        elif relationship_type == REL_TYPE_GEOMETRIC_SEQUENCE:
             ratio = output[0]/input[0]
             if int(ratio) == ratio:
                 ratio = int(ratio)
             varname, value, oper = ("ratio", ratio, "*")
+        elif relationship_type == REL_TYPE_EXPONENTIAL_SEQUENCE:
+            pass
+        elif relationship_type == REL_TYPE_LOGARITHMIC_SEQUENCE:
+            pass
         else:
             error_state = True
 
         if error_state:
             code = ERROR_NOT_ARTHIMETIC_GEOMETRIC
+        elif relationship_type in [ REL_TYPE_EXPONENTIAL_SEQUENCE, REL_TYPE_LOGARITHMIC_SEQUENCE]:
+            code = get_explog_code(relationship_type)
         else:
             code = get_loop_code(varname, value, oper)
 
@@ -322,6 +361,10 @@ def process_for_relationships(input_l, output_l):
     if isinstance(input_l, str):
         code = process_for_dates(input_l, output_l)
         return code
+
+    input_types = [str(type(x)) for x in input_l]
+    if "<class 'str'>" in input_types:
+        return "Sorry, I can not handle Input LISTS with Strings  at this time !!!!!!!"
 
     freq_two_or_more = [x for x in output_l if output_l.count(x) > 1]
     output_categories = set(freq_two_or_more)  # removes duplicates

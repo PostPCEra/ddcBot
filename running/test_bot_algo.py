@@ -15,6 +15,9 @@ def main():
     {'case': '2.1 Geometric Sequence', 'data': ([2, 6, 7], [-10, -30, -35])},
     {'case': '2.1 Geometric one missing', 'data': ([2, 6, 7], [-10, -30, -30])},
 
+    {'case': '2.2 exponential', 'data': ([2, 3, 5, 6], [8, 27, 125,  216])},
+    {'case': '2.2 logarithmic', 'data': ( [8, 27, 125, 216],[2, 3, 5, 6])},
+
     {'case': '3.0 FizzBuzz like category',
      'data': (list(range(1, 15)), [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13, 14] )},
     {'case': '3.1 FizzBuzz 2',
@@ -29,7 +32,7 @@ def main():
     ]
 
     #for pair in test_suite[3:4]:  # by simpy changing index, we can selectively feed the test cases we like
-    for row in test_suite[:2]:
+    for row in test_suite[8:9]:
 
         log.debug('------------{}\n'.format(row['case']))
         input_as_value, output_as_value = row['data']

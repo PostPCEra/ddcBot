@@ -57,6 +57,26 @@ date2 = '2018-04-18'
 # @input = date1 ; @output = date2
 """
 
+excode6 = """import sys
+import os
+import math
+
+a = [2, 3, 5, 6]
+b = [8, 27, 125,  216]
+
+# @input = a ; @output = b
+"""
+ 
+excode7 = """import sys
+import os
+import math
+
+a = [8, 27, 125,  216] 
+b = [2, 3, 5, 6]
+
+# @input = a ; @output = b
+"""
+
 default_rows = "15"
 default_cols = "60"
 
