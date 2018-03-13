@@ -37,19 +37,12 @@ REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
 REL_TYPE_EXPONENTIAL_SEQUENCE = 'exponential_sequence'
 REL_TYPE_LOGARITHMIC_SEQUENCE = 'logarithmic_sequence'
 REL_TYPE_UNKNOWN = 'unknown'
-PASS_VALUE1 = ''
 
 # Error codes
 ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
-ERROR_LIST = [ ERROR_NOT_ARTHIMETIC_GEOMETRIC,
 
-    1
-]
-
-# Global vars, these vars will be Set in main_entry_point() , they will be accessed in generate_code() functions
-INPUT_SYMBOL = ''
-OUTPUT_SYMBOL = ''
-
+ERROR_LIST = [ ERROR_NOT_ARTHIMETIC_GEOMETRIC, 1
+    ]
 # ------------------- Logging -------------------------
 #
 # -------------------  *****************  ------------------------
@@ -71,6 +64,28 @@ def setup_logger(filename="/Users/padma/ddcBot/log/log-4-ddcBot.log"):
 # Logging Tutorial : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
 log = setup_logger()
 
+# class to hold category data
+class Relationship_data(object):
+    input_symbol = ''
+    output_symbol = ''
+    relationship_type = ''
+    value1 = ''
+    value2 = 0
+    value3 = ''
+
+    def update_symbols(self, input_symbol, output_symbol):
+        self.input_symbol = input_symbol
+        self.output_symbol = output_symbol
+
+    def update(self, relationship_type, val1, val2=0, val3=''):
+        self.relationship_type = relationship_type
+        self.value1 = val1
+        self.value2 = val2
+        self.value3 = val3
+
+
+REL_OBJ = Relationship_data()  # create new global instance
+
 # ------------------- find all relationships -------------------------------------------
 #
 # The following group of functions determine the relationship between Input & Ouput Lists
@@ -80,33 +95,29 @@ log = setup_logger()
 def find_relation_input_to_output(input, output):
 
     # no try: catch: required as we are going to pre check to make sure all input/out is either int/float numbers
+    global REL_OBJ  # declare global to update obj
 
     diff = [output[i] - input[i] for i in range(len(input))]
     if len(set(diff)) == 1:   # length will be 1 if all elements are same, because set() returns unique elements
+        REL_OBJ.update(REL_TYPE_ARITHMETIC_SEQUENCE, 'delta', diff[0], '+')
         return REL_TYPE_ARITHMETIC_SEQUENCE
-        # return REL_TYPE_ARITHMETIC_SEQUENCE, diff[0]
 
     multiple = [output[i] / input[i] for i in range(len(input))]
     if len(set(multiple)) == 1:
+        REL_OBJ.update(REL_TYPE_GEOMETRIC_SEQUENCE, 'multiple', multiple[0], '*')
         return REL_TYPE_GEOMETRIC_SEQUENCE
-        # return REL_TYPE_GEOMETRIC_SEQUENCE, multiple[0]
 
+    # if  round() for 3 places same for all elements, then it is integer number
     exponential = [round(math.log10(output[i]) / math.log10(input[i]), 3) for i in range(len(input))]
     log.debug(exponential)
-    log.debug(exponential[0])
     if len(set(exponential)) == 1:
-        global PASS_VALUE1
-        PASS_VALUE1 = exponential[0]   # set to global value
-        log.debug(PASS_VALUE1)
         if exponential[0] > 1:
+            REL_OBJ.update(REL_TYPE_EXPONENTIAL_SEQUENCE, exponential[0])
             return REL_TYPE_EXPONENTIAL_SEQUENCE
-            # if above round() for 2 places same for all elements, then it is integer number
-            # return REL_TYPE_GEOMETRIC_SEQUENCE, round(exponential[0])
 
         else:
+            REL_OBJ.update(REL_TYPE_LOGARITHMIC_SEQUENCE, exponential[0])
             return REL_TYPE_LOGARITHMIC_SEQUENCE
-            # math.pow(32, 1/5)
-
 
     # if not any one of above
     return REL_TYPE_UNKNOWN
@@ -176,30 +187,32 @@ def extract_categories(zip_inout, output_categories):
 
 def gen_dates_code(delta, formatstr):
     code = "import datetime\n" + \
-            "dt = datetime.datetime.strptime({}, '{}')\n".format(INPUT_SYMBOL, formatstr) + \
+            "dt = datetime.datetime.strptime({}, '{}')\n".format(REL_OBJ.input_symbol, formatstr) + \
            "delta = {}  # this is time delta that needs to be added \n".format(delta) + \
-           "{} = dt + delta \n".format(OUTPUT_SYMBOL)
+           "{} = dt + delta \n".format(REL_OBJ.output_symbol)
     return code
 
-def get_loop_code(varname, value, oper):
+def get_loop_code():
+    log.debug('asr fresh******: ' +REL_OBJ.output_symbol)
 
-    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
-           "{} = {} \n".format(varname, value) + \
-           "for x in {}:\n\t".format(INPUT_SYMBOL) + \
-           "{}.append({} {} x)\n\n".format(OUTPUT_SYMBOL, varname, oper)
+    code = "{} = [ ]\n".format(REL_OBJ.output_symbol) + \
+           "{} = {} \n".format(REL_OBJ.value1, REL_OBJ.value2) + \
+           "for x in {}:\n\t".format(REL_OBJ.input_symbol) + \
+           "{}.append({} {} x)\n\n".format(REL_OBJ.output_symbol, REL_OBJ.value1, REL_OBJ.value3)
+
     return code
 
-def get_explog_code(relationship_type):
+def get_explog_code():
 
-    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
-           "for x in {}:\n\t".format(INPUT_SYMBOL) + \
-           "{}.append(round(math.pow(x, {})))\n\n".format(OUTPUT_SYMBOL, PASS_VALUE1)
+    code = "{} = [ ]\n".format(REL_OBJ.output_symbol) + \
+           "for x in {}:\n\t".format(REL_OBJ.input_symbol) + \
+           "{}.append(round(math.pow(x, {})))\n\n".format(REL_OBJ.output_symbol, REL_OBJ.value1)
     return code
 
 def get_category_code(cat_lst, edge_values):
 
-    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
-           "for n in {}:\n\t".format(INPUT_SYMBOL)
+    code = "{} = [ ]\n".format(REL_OBJ.output_symbol) + \
+           "for n in {}:\n\t".format(REL_OBJ.input_symbol)
 
     idx = 0
     segment = "if n <= {}:\n\t\t".format(edge_values[idx]) + \
@@ -212,7 +225,7 @@ def get_category_code(cat_lst, edge_values):
         segment = segment + tmp
         idx = idx + 1
 
-    tmp = "\n\t{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
+    tmp = "\n\t{}.append(element)\n\n\t".format(REL_OBJ.output_symbol)
 
     code = code + segment + tmp
     # print(code)
@@ -227,8 +240,8 @@ def get_sequence_code(dict1, delta):
     tuple_lst.sort(key=itemgetter(0))
     tuple_lst.sort(key=itemgetter(1), reverse=True)
 
-    code = "{} = [ ]\n".format(OUTPUT_SYMBOL) + \
-           "for n in {}:\n\t".format(INPUT_SYMBOL)
+    code = "{} = [ ]\n".format(REL_OBJ.output_symbol) + \
+           "for n in {}:\n\t".format(REL_OBJ.input_symbol)
 
     segment = "if n % {} == 0:\n\t\t".format(tuple_lst[0][1]) + \
                 "element = '{}'\n\t".format(tuple_lst[0][0])
@@ -241,7 +254,7 @@ def get_sequence_code(dict1, delta):
     tmp2 = "" if delta == 0 else " + {}".format(delta)
     tmp = "else:\n\t\t" + \
           "element = n {}\n\n\t".format(tmp2) + \
-            "{}.append(element)\n\n\t".format(OUTPUT_SYMBOL)
+            "{}.append(element)\n\n\t".format(REL_OBJ.output_symbol)
 
     code = code + segment + tmp
     return code
@@ -254,30 +267,17 @@ def generate_code(categories, cat_relationships):
 
     if length == 1:
         log.debug("  Input data relationship: {}\n:".format(cat_relationships[CAT_TYPE_ALLOTHER]))
-        input, output = categories[CAT_TYPE_ALLOTHER]  # input/output values
-
-        relationship_type  = cat_relationships[CAT_TYPE_ALLOTHER]
-        if relationship_type == REL_TYPE_ARITHMETIC_SEQUENCE:
-            varname, value, oper = ("delta", output[0]-input[0], "+")
-
-        elif relationship_type == REL_TYPE_GEOMETRIC_SEQUENCE:
-            ratio = output[0]/input[0]
-            if int(ratio) == ratio:
-                ratio = int(ratio)
-            varname, value, oper = ("ratio", ratio, "*")
-        elif relationship_type == REL_TYPE_EXPONENTIAL_SEQUENCE:
-            pass
-        elif relationship_type == REL_TYPE_LOGARITHMIC_SEQUENCE:
-            pass
+        relationship_type = cat_relationships[CAT_TYPE_ALLOTHER]
+        log.debug('relationship_type: ' + REL_OBJ.relationship_type)
+        log.debug('value1: ' + str(REL_OBJ.value1))
+        log.debug('value2: ' + str(REL_OBJ.value2))
+        log.debug('value3: ' + str(REL_OBJ.value3))
+        if relationship_type in [REL_TYPE_ARITHMETIC_SEQUENCE, REL_TYPE_GEOMETRIC_SEQUENCE]:
+            code = get_loop_code()
+        elif relationship_type in [REL_TYPE_EXPONENTIAL_SEQUENCE, REL_TYPE_LOGARITHMIC_SEQUENCE]:
+            code = get_explog_code()
         else:
-            error_state = True
-
-        if error_state:
             code = ERROR_NOT_ARTHIMETIC_GEOMETRIC
-        elif relationship_type in [ REL_TYPE_EXPONENTIAL_SEQUENCE, REL_TYPE_LOGARITHMIC_SEQUENCE]:
-            code = get_explog_code(relationship_type)
-        else:
-            code = get_loop_code(varname, value, oper)
 
         return code
 
@@ -386,13 +386,14 @@ def process_for_relationships(input_l, output_l):
 
 
 def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value):
-    global INPUT_SYMBOL    # need to state we are accessing Globally declared ones in this local method in order to modify them
-    global OUTPUT_SYMBOL
-    INPUT_SYMBOL = input_as_symbol  # now access these in code_gen() methods
-    OUTPUT_SYMBOL = output_as_symbol
+    # need to state we are accessing Globally declared ones in this local method in order to modify them
+    global REL_OBJ
+
+    # update to global object, so we access these in code_gen() methods
+    REL_OBJ.update_symbols(input_as_symbol, output_as_symbol)
 
     #input_as_value = eval(input_as_symbol)  # not working for stand alone , so levae it
-    input_as_value =  in_as_value
+    input_as_value = in_as_value
     output_as_value = out_as_value
 
     log.debug('\n------------- passed input/output values   ----------------')
