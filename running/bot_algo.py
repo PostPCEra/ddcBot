@@ -186,10 +186,12 @@ def extract_categories(zip_inout, output_categories):
 #
 
 def gen_dates_code(delta, formatstr):
-    code = "import datetime\n" + \
-            "dt = datetime.datetime.strptime({}, '{}')\n".format(REL_OBJ.input_symbol, formatstr) + \
-           "delta = {}  # this is time delta that needs to be added \n".format(delta) + \
-           "{} = dt + delta \n".format(REL_OBJ.output_symbol)
+    #code = "import datetime\n" + \
+    code = "dt = datetime.datetime.strptime({}, '{}')\n".format(REL_OBJ.input_symbol, formatstr) + \
+           "delta = {}  # this is time delta that needs to be added \n".format(delta.days) + \
+           "dt = dt + datetime.timedelta(days=delta) \n" + \
+           "{} = datetime.datetime.strftime(dt, '{}')\n".format(REL_OBJ.output_symbol, formatstr)
+
     return code
 
 def get_loop_code():

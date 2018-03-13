@@ -48,8 +48,7 @@ seq_out = ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult']
 # @input = seq_in ; @output = seq_out
 """
 
-excode5 = """import sys
-import os
+excode5 = """import datetime
 
 date1 = '2018-01-15'
 date2 = '2018-04-18'
@@ -66,19 +65,19 @@ b = [8, 27, 125,  216]
 
 # @input = a ; @output = b
 """
- 
+
 excode7 = """import sys
 import os
 import math
-
+ 
 a = [8, 27, 125,  216] 
 b = [2, 3, 5, 6]
 
 # @input = a ; @output = b
 """
 
-default_rows = "15"
-default_cols = "60"
+default_rows = "40"  # 15  , 18
+default_cols = "90"   # 60
 
 @app.route("/")
 @app.route("/examples")
