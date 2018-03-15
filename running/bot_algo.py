@@ -38,6 +38,12 @@ REL_TYPE_EXPONENTIAL_SEQUENCE = 'exponential_sequence'
 REL_TYPE_LOGARITHMIC_SEQUENCE = 'logarithmic_sequence'
 REL_TYPE_UNKNOWN = 'unknown'
 
+REL_TYPE_LIST_TO_ONE_SUM = 'list_to_one_sum'
+REL_TYPE_LIST_TO_ONE_MAX = 'list_to_one_max'
+REL_TYPE_LIST_TO_ONE_MIN = 'list_to_one_min'
+REL_TYPE_LIST_TO_ONE_MEAN = 'list_to_one_mean'
+
+
 # Error codes
 ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
 
@@ -194,15 +200,32 @@ def gen_dates_code(delta, formatstr):
 
     return code
 
-def get_loop_code():
-    log.debug('asr fresh******: ' +REL_OBJ.output_symbol)
+def gen_list_to_one_code():
+    code = "{} = {}     # initialize variable \n".format(REL_OBJ.value1, REL_OBJ.value2) + \
+           "for x in {}:\n\t".format(REL_OBJ.input_symbol)
 
+    if REL_OBJ.relationship_type in [REL_TYPE_LIST_TO_ONE_MAX, REL_TYPE_LIST_TO_ONE_MIN]:
+        code = code + "if x {} {}: \n\t\t{} = x\n\n".format(REL_OBJ.value3, REL_OBJ.value1, REL_OBJ.value1)
+    else:
+        code = code + "{} = {} {} x\n\n".format(REL_OBJ.value1, REL_OBJ.value1, REL_OBJ.value3)
+
+    value1mod = REL_OBJ.value1
+    if REL_OBJ.relationship_type == REL_TYPE_LIST_TO_ONE_MEAN:
+        code = code + "mean = {} / len({})\n".format(REL_OBJ.value1, REL_OBJ.input_symbol)
+        value1mod = "mean"
+
+    code = code +"{} = {}     # assign final value to output variable \n".format(REL_OBJ.output_symbol, value1mod) + \
+           "print({})\n".format(REL_OBJ.output_symbol)
+    return code
+
+
+def get_loop_code():
     code = "{} = [ ]\n".format(REL_OBJ.output_symbol) + \
            "{} = {} \n".format(REL_OBJ.value1, REL_OBJ.value2) + \
            "for x in {}:\n\t".format(REL_OBJ.input_symbol) + \
            "{}.append({} {} x)\n\n".format(REL_OBJ.output_symbol, REL_OBJ.value1, REL_OBJ.value3)
-
     return code
+
 
 def get_explog_code():
 
@@ -361,18 +384,23 @@ def process_for_dates(dtstr1, dtstr2):
 def handle_one_to_one():
     return 'one to one : int or float'
 
-def handle_list_to_one(input, output):
-    msg = ''
-    if sum(input) == output:
-        msg = 'this is sum -----'
-    elif sum(input)/len(input) == output:
-        msg = 'this is avg -----'
-    elif min(input) == output:
-        msg = 'this is min -----'
-    elif max(input) == output:
-        msg = 'this is max -----'
 
-    return msg
+def handle_list_to_one(input, output):
+    code = 'no code generated'
+    init_value = "{}[0]".format(REL_OBJ.input_symbol)
+    if sum(input) == output:
+        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_SUM, 'sum', 0, '+')
+    elif max(input) == output:
+        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MAX, 'max', init_value, '>')
+    elif min(input) == output:
+        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MIN, 'min', init_value, '<')
+    elif sum(input)/len(input) == output:
+        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MEAN, 'sum', 0, '+')
+
+    if REL_OBJ.relationship_type in [REL_TYPE_LIST_TO_ONE_SUM, REL_TYPE_LIST_TO_ONE_MAX, REL_TYPE_LIST_TO_ONE_MIN, REL_TYPE_LIST_TO_ONE_MEAN]:
+        code = gen_list_to_one_code()
+
+    return code
 
 def validate_input(input, output):
 
@@ -392,16 +420,15 @@ def validate_input(input, output):
     in_types = [str(type(x)) for x in input]
     in_set = "".join(set(in_types))  # join as one single string so easy to compare below
 
-    valid_input = in_set == cls_int or in_set == cls_float or \
-                  in_set == cls_float+cls_int or in_set == cls_int+cls_float
+    possibilities = [cls_int, cls_float, cls_float + cls_int, cls_int + cls_float]
     error = ''
     if cls_str in in_types:
         error = "Sorry, I do not support String data as part of  INPUT List at this time!!"
         return error
 
     # this is to test if any 'List of Lists' or 'tuples' exists in iNPUT
-    if not valid_input:
-        error = "Sorry, I do not support 'nested LISTS' as part of  INPUT List at this time!!"
+    if in_set not in possibilities:
+        error = "Sorry, I do not support 'nested LISTS' as part of  INPUT List at this time!!!"
         return error
 
     # at this point in flow INPUT  is valid LIST, if OUTPUT is single value, call the handle function,

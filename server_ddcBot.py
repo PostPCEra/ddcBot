@@ -3,6 +3,15 @@ from runcode import runcode
 app = Flask(__name__)
 
 
+excode00 = """import sys
+import os
+ 
+grades = [ 92, 77, 84, 79, 68]
+good = 92
+ 
+# @input = grades ; @output = good
+"""
+
 excode0 = """import sys
 import os
 
