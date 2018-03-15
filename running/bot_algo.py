@@ -358,11 +358,69 @@ def process_for_dates(dtstr1, dtstr2):
 # ------------------- process for relationship -------------------------
 #
 # -------------------  *****************  ---------------------------
+def handle_one_to_one():
+    return 'one to one : int or float'
+
+def handle_list_to_one(input, output):
+    msg = ''
+    if sum(input) == output:
+        msg = 'this is sum -----'
+    elif sum(input)/len(input) == output:
+        msg = 'this is avg -----'
+    elif min(input) == output:
+        msg = 'this is min -----'
+    elif max(input) == output:
+        msg = 'this is max -----'
+
+    return msg
+
+def validate_input(input, output):
+
+    cls_int, cls_float, cls_str = "<class 'int'>", "<class 'float'>", "<class 'str'>"
+    in_type, out_type = str(type(input)), str(type(output))
+
+    if in_type in [cls_int, cls_float]:
+        if out_type in [cls_int, cls_float]:
+            return handle_one_to_one()
+        else:
+            error = "Sorry, When Input type is int/float output should be similar type !!"
+            return error
+    elif in_type == cls_str:
+        error = "Sorry, I do not support  String data as INPUT at this time!!"
+        return error
+
+    in_types = [str(type(x)) for x in input]
+    in_set = "".join(set(in_types))  # join as one single string so easy to compare below
+
+    valid_input = in_set == cls_int or in_set == cls_float or \
+                  in_set == cls_float+cls_int or in_set == cls_int+cls_float
+    error = ''
+    if cls_str in in_types:
+        error = "Sorry, I do not support String data as part of  INPUT List at this time!!"
+        return error
+
+    # this is to test if any 'List of Lists' or 'tuples' exists in iNPUT
+    if not valid_input:
+        error = "Sorry, I do not support 'nested LISTS' as part of  INPUT List at this time!!"
+        return error
+
+    # at this point in flow INPUT  is valid LIST, if OUTPUT is single value, call the handle function,
+    if out_type in [cls_int, cls_float]:
+        return handle_list_to_one(input, output)
+    else:
+        #error = "call other routines, it may be fizz buzz like INPUT number list, output mix list"
+        error = "continue"
+        return error
+
 def process_for_relationships(input_l, output_l):
 
     if isinstance(input_l, str):
         code = process_for_dates(input_l, output_l)
         return code
+
+    msg = validate_input(input_l, output_l)
+    if msg != "continue":
+        return msg
 
     input_types = [str(type(x)) for x in input_l]
     if "<class 'str'>" in input_types:
