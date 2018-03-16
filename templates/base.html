@@ -1,14 +1,31 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <title>Coding Bot</title>
     <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+
+<!-- Magnific Popup core CSS file -->
+<link rel="stylesheet" href="/static/magnific-popup/magnific-popup.css">
+<!-- jQuery 1.7.2+ or Zepto.js 1.0+ -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- Magnific Popup core JS file -->
+<script src="/static/magnific-popup/jquery.magnific-popup.js"></script>
+
     <link rel="stylesheet" type="text/css" href="/static/devc.css">
 
 </head>
 <body id="index" class="home">
 <div id="links">
-<ul>
+
+</div>
+
+<div id="test-popup" class="white-popup2 mfp-hide">
+    Various examples of Coding Bot are logically grouped based on their type
+    <ul>
     <li><a href="/examples?ex=1">Ex. 1</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
     <li><a href="/examples?ex=2">Ex. 2</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
     <li><a href="/examples?ex=3">Ex. 3</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
@@ -16,8 +33,36 @@
     <li><a href="/examples?ex=5">Ex. 5</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
     <li><a href="/examples?ex=6">Ex. 6</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
     <li><a href="/examples?ex=7">Ex. 7</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-</ul>
+  </ul>
+
+  <div class="card-group">
+
+  <div class="card">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">List group item heading</h5>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+
+    </div>
+  </div>
+
+  <div class="card">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">List to value: sum, max, min</li>
+          <li class="list-group-item">List to value: sum, max, min222</li>
+      </ul>
+
+  </div>
+  <div class="card">
+
+  </div>
+
 </div>
+
+</div>
+
 
 
 <div id="content">
@@ -28,8 +73,10 @@
               Source Code
             </div>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#test-popup" class="open-popup-link">Examples</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input id="bot-button" class="head-section" type="submit" name="button1" value="Invoke Bot" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input id="launch-button" class="head-section" type="submit"  name="button1" value="Run" />
             {% block code %}
             {% endblock %}
@@ -47,7 +94,8 @@
     </div>
     
     <!-- ************ COMPILATION RESULTS ZONE ************ -->
-    
+
+
     <div id="compile">
         <div id="title-compile" class="head-section">
             Compilation / Output
@@ -80,7 +128,12 @@
     });
 </script>
 
-
+<script>
+$('.open-popup-link').magnificPopup({
+  type:'inline',
+  leftClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
+});
+</script>
 
 </body>
 </html>
