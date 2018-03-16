@@ -3,7 +3,16 @@ from runcode import runcode
 app = Flask(__name__)
 
 #  34343 333
-excode00 = """import sys
+excode2_1 = """import sys
+import os
+
+num = [ 4, 7, 4, 6 ]
+all = 21
+
+# @input = grades ; @output = good
+"""
+
+excode2_2 = """import sys
 import os
  
 grades = [ 92, 77, 84, 79, 68]
@@ -12,34 +21,56 @@ good = 92
 # @input = grades ; @output = good
 """
 
-excode0 = """import sys
+excode2_3 = """import sys
+import os
+
+grades = [ 92, 77, 84, 79, 68]
+bad = 68
+
+# @input = grades ; @output = good
+"""
+
+excode2_4 = """import sys
+import os
+
+num = [ 8, 7, 4, 5 ]
+all = 6
+
+# @input = grades ; @output = good
+"""
+
+
+excode1_1 = """import sys
 import os
 
 a = [ 1, 3, 4]
-b = [ 2, 6, 8]
+b = [ 4, 6, 7]
 
 # @input = a ; @output = b
 """
 
-excode1 = """import sys
+excode1_2 = """import sys
 import os
 
-height = [2, 6, 7] 
-weight = [10, 30, 35]
+weight = [2, 6, 7] 
+height = [10, 30, 35]
 
-# @input = height ; @output = weight
+# @input = weight ; @output = height 
 """
 
-excode2 = """import sys
+excode1_3 = """import sys
 import os
+import math
 
-cat_in = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  
-cat_out = [5, 6, 'fizz', 8, 'buzz', 'fizz', 11, 12, 'fizz','buzz']
+# This represents logarithmic relationship. if you swap input output , you will get exponential relationship code 
+a = [8, 27, 125,  216] 
+b = [2, 3, 5, 6]
 
-# @input = cat_in ; @output = cat_out
+# @input = a ; @output = b
 """
 
-excode3 = """import sys
+
+excode3_1 = """import sys
 import os
 
 cat_in = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] 
@@ -48,7 +79,16 @@ cat_out = [1, 2, 'fizz', 4, 'buzz', 'fizz', 7, 8, 'fizz', 'buzz', 11, 'fizz', 13
 # @input = cat_in ; @output = cat_out
 """
 
-excode4 = """import sys
+excode3_2 = """import sys
+import os
+
+cat_in = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  
+cat_out = [5, 6, 'fizz', 8, 'buzz', 'fizz', 11, 12, 'fizz','buzz']
+
+# @input = cat_in ; @output = cat_out
+"""
+
+excode3_3 = """import sys
 import os
 
 seq_in = [2, 6,12, 13,15, 19, 20, 58] 
@@ -57,7 +97,7 @@ seq_out = ['child', 'child', 'child', 'teen', 'teen', 'teen', 'adult', 'adult']
 # @input = seq_in ; @output = seq_out
 """
 
-excode5 = """import datetime
+excode4_2 = """import datetime
 
 date1 = '2018-01-15'
 date2 = '2018-04-18'
@@ -65,28 +105,16 @@ date2 = '2018-04-18'
 # @input = date1 ; @output = date2
 """
 
-excode6 = """import sys
-import os
-import math
 
-a = [2, 3, 5, 6]
-b = [8, 27, 125,  216]
 
-# @input = a ; @output = b
-"""
-
-excode7 = """import sys
-import os
-import math
- 
-a = [8, 27, 125,  216] 
-b = [2, 3, 5, 6]
-
-# @input = a ; @output = b
-"""
 
 default_rows = "40"  # 15  , 18
 default_cols = "90"   # 60
+
+@app.route("/test")
+def test():
+    return render_template("popup.html")
+
 
 @app.route("/")
 @app.route("/examples")
