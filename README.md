@@ -24,6 +24,13 @@ $ virtualenv env
 $ . env/bin/activate
 $ pip install Flask
 ```
+Additional Installs required
+Magnific-Popup : Light and responsive [lightbox script with focus on performance.](https://github.com/dimsemenov/Magnific-Popup)
+```
+- downloaded to /static/magnific-popup
+- Magnific-Popup is Jquery dependent, so JQuery accessed directy from CDN in base.html 
+- Content inside popup is style with Bootstrap, so it is fetched from CDN in base.html
+```
 
 Run the server:
 ```
