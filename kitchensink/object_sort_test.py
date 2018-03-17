@@ -3,6 +3,13 @@
 
 import functools
 
+# ---------- big note on SORTING Dictionaries -------------
+# Dictionaries are unstable to keep sort order ( as per Stackoverflow notes ), advise
+# if sort is required on Dict, convert dict to List and do it .
+#  Practical way is do it as object after creating objects from Class
+#
+# ----- no soring of List of Dict,  only Filter of List of Dict ....
+
 d1= [ {'name': 'gitu', 'grade': 93}, {'name': 'manju', 'grade': 89}, {'name': 'charvi', 'grade': 80},
      {'name': 'bani', 'grade': 78}
      ]
@@ -75,7 +82,11 @@ s3 = Student('Ann B.', 12)
 grade_book = [s1, s2, s3]
 
 type(s1.age)
-def student_compare(o1, o2):
+
+def age_compare(o1, o2):
+    return o1.age - o2.age
+
+def name_compare(o1, o2):
 
     if (o1.name > o2.name):
         ret = 1
@@ -83,12 +94,22 @@ def student_compare(o1, o2):
         ret = -1
     else:
         ret = 0
-    return 0
-    #return o1.age - o2.age
+
+    return ret
 
 
-sortbook = sorted(grade_book, key=functools.cmp_to_key(student_compare))
+print('\n-- Original object list-----')
+for stu in grade_book:
+    stu.print()
 
 
+print('\n-- name comapre')
+sortbook = sorted(grade_book, key=functools.cmp_to_key(name_compare))
+for stu in sortbook:
+    stu.print()
+
+
+print('\n-- age comapre')
+sortbook = sorted(grade_book, key=functools.cmp_to_key(age_compare))
 for stu in sortbook:
     stu.print()
