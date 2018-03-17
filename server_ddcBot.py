@@ -137,7 +137,7 @@ def runpy():
     else:
         num = request.args.get('ex')
         if num is None:
-            num = '0'
+            num = '2_1'
 
         code = eval('excode' + num)
         resrun = 'No result!'
