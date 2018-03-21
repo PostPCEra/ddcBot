@@ -1,4 +1,6 @@
 
+# v2
+
 # global constants
 CAT_TYPE_ALLOTHER = 'allother'  # Category type
 REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
