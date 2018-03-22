@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
-from runcode import runcode
+#from runcode import runcode
 
+from app import execute_pycode as execpycode
 from app import examples_pycode as example
 
 app = Flask(__name__)
 
 
-default_rows = "40"  # 15  , 18
+default_rows = "40"  # 15   , 18
 default_cols = "90"   # 60
 
 @app.route("/test")
@@ -22,7 +23,7 @@ def runpy():
     if request.method == 'POST':
         code = request.form['code']
         submit_type = request.form['button1']
-        run = runcode.RunPyCode(code)
+        run = execpycode.RunPyCode(code)
         rescompil, resrun = run.run_py_code(submit_type, code)
         if not resrun:
             resrun = 'No result!'
