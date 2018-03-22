@@ -3,7 +3,7 @@
 excode2_1 = """import sys
 import os
 
-# num represent a list of numbers 
+# num represent a list of numbers 22
 num = [ 4, 7, 4, 6 ]
 all = 21
 

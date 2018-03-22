@@ -6,7 +6,7 @@ import re
 
 # this import 'from' should be 'app' because this code will be imported into server_ddcBot.py file
 from app.global_const import *
-from app import validate_input
+from app import validate_iolegend
 
 class MyNoInputException(Exception):
     pass
@@ -41,7 +41,7 @@ class RunPyCode(object):
                 botcode = open('./app/bot_algorithm.py', 'r').read()
                 f.write(botcode)  # and ADD botcode that is is our alog code from bot_algo.py file
 
-                main_call_code = validate_input.extract_input_output_names(code)
+                main_call_code = validate_iolegend.extract_input_output_names(code)
                 f.write(main_call_code)
                 if 'Error:****' in main_call_code:
                     return main_call_code, main_call_code  # return error to both std_err, std_out

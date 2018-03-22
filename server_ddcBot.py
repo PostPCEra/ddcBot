@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
-#from runcode import runcode
 
+
+# ------------------- application specific imports
 from app import execute_pycode as execpycode
 from app import examples_pycode as example
 
@@ -9,11 +10,6 @@ app = Flask(__name__)
 
 default_rows = "40"  # 15   , 18
 default_cols = "90"   # 60
-
-@app.route("/test")
-def test():
-    return render_template("popup.html")
-
 
 @app.route("/")
 @app.route("/examples")

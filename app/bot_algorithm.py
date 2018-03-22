@@ -14,6 +14,7 @@ import math
 # ------------------- application specific imports
 import global_const as gc
 import generate_code as gencode
+import validate_if_numericio as validate_numeric
 
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
@@ -133,7 +134,7 @@ def extract_categories(zip_inout, output_categories):
 
 
 
-def generate_code(categories, cat_relationships):
+def parse_relationships_and_invoke_generate_code(categories, cat_relationships):
 
     length = len(categories)
     gc.log.debug("  num. of Categories in Input data: {}\n:".format(str(length)))
@@ -149,7 +150,7 @@ def generate_code(categories, cat_relationships):
         if relationship_type in [gc.REL_TYPE_ARITHMETIC_SEQUENCE, gc.REL_TYPE_GEOMETRIC_SEQUENCE]:
             code = gencode.get_loop_code()
         elif relationship_type in [gc.REL_TYPE_EXPONENTIAL_SEQUENCE, gc.REL_TYPE_LOGARITHMIC_SEQUENCE]:
-            code = gencode.get_expgc.log_code()
+            code = gencode.get_explog_code()
         else:
             code = gc.ERROR_NOT_ARTHIMETIC_GEOMETRIC
 
@@ -230,63 +231,6 @@ def process_for_dates(dtstr1, dtstr2):
 # ------------------- process for relationship -------------------------
 #
 # -------------------  *****************  ---------------------------
-def handle_one_to_one():
-    return 'one to one : int or float'
-
-
-def handle_list_to_one(input, output):
-    code = 'no code generated'
-    init_value = "{}[0]".format(gc.REL_OBJ.input_symbol)
-    if sum(input) == output:
-        gc.REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_SUM, 'sum', 0, '+')
-    elif max(input) == output:
-        gc.REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MAX, 'max', init_value, '>')
-    elif min(input) == output:
-        gc.REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MIN, 'min', init_value, '<')
-    elif sum(input)/len(input) == output:
-        gc.REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MEAN, 'sum', 0, '+')
-
-    if gc.REL_OBJ.relationship_type in [gc.REL_TYPE_LIST_TO_ONE_SUM, gc.REL_TYPE_LIST_TO_ONE_MAX, gc.REL_TYPE_LIST_TO_ONE_MIN, gc.REL_TYPE_LIST_TO_ONE_MEAN]:
-        code = gencode.gen_list_to_one_code()
-
-    return code
-
-def validate_input(input, output):
-
-    cls_int, cls_float, cls_str = "<class 'int'>", "<class 'float'>", "<class 'str'>"
-    in_type, out_type = str(type(input)), str(type(output))
-
-    if in_type in [cls_int, cls_float]:
-        if out_type in [cls_int, cls_float]:
-            return handle_one_to_one()
-        else:
-            error = "Sorry, When Input type is int/float output should be similar type !!"
-            return error
-    elif in_type == cls_str:
-        error = "Sorry, I do not support  String data as INPUT at this time!!"
-        return error
-
-    in_types = [str(type(x)) for x in input]
-    in_set = "".join(set(in_types))  # join as one single string so easy to compare below
-
-    possibilities = [cls_int, cls_float, cls_float + cls_int, cls_int + cls_float]
-    error = ''
-    if cls_str in in_types:
-        error = "Sorry, I do not support String data as part of  INPUT List at this time!!"
-        return error
-
-    # this is to test if any 'List of Lists' or 'tuples' exists in iNPUT
-    if in_set not in possibilities:
-        error = "Sorry, I do not support 'nested LISTS' as part of  INPUT List at this time!!!"
-        return error
-
-    # at this point in flow INPUT  is valid LIST, if OUTPUT is single value, call the handle function,
-    if out_type in [cls_int, cls_float]:
-        return handle_list_to_one(input, output)
-    else:
-        #error = "call other routines, it may be fizz buzz like INPUT number list, output mix list"
-        error = "continue"
-        return error
 
 def process_for_relationships(input_l, output_l):
 
@@ -294,7 +238,7 @@ def process_for_relationships(input_l, output_l):
         code = process_for_dates(input_l, output_l)
         return code
 
-    msg = validate_input(input_l, output_l)
+    msg = validate_numeric.validate_if_numeric_inputoutput(input_l, output_l)
     if msg != "continue":
         return msg
 
@@ -316,7 +260,7 @@ def process_for_relationships(input_l, output_l):
 
     cat_relationships = find_all_relationships(categories)
 
-    code = generate_code(categories, cat_relationships)
+    code = parse_relationships_and_invoke_generate_code(categories, cat_relationships)
     gc.log.info(code)
     return code
 
