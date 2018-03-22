@@ -24,7 +24,7 @@ def gen_list_to_one_code():
 
     value1mod = gc.REL_OBJ.value1
     if gc.REL_OBJ.relationship_type == gc.REL_TYPE_LIST_TO_ONE_MEAN:
-        code = code + "mean = {} / len({}):\n".format(gc.REL_OBJ.value1, gc.REL_OBJ.input_symbol)
+        code = code + "mean = {} / len({})\n".format(gc.REL_OBJ.value1, gc.REL_OBJ.input_symbol)
         value1mod = "mean"
 
     code = code +"{} = {}     # assign final value to output variable \n".format(gc.REL_OBJ.output_symbol, value1mod) + \
