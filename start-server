@@ -1,0 +1,4 @@
+virtualenv env
+. env/bin/activate
+
+python server*ddc* &
