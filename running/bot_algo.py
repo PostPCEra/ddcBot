@@ -12,6 +12,9 @@ import logging
 import datetime
 import math
 
+# ------------------- application specific imports
+import global_const as gc
+
 # ---------- TODO -----------------------------
 # 0. Error condition test cases & code changes to handle those
 # DONE : 1. Logging : https://www.digitalocean.com/community/tutorials/how-to-use-logging-in-python-3
@@ -30,25 +33,7 @@ import math
 # Filter : student records whose grade below 60%
 #  ---------- TODO -----------------------------
 
-# global constants
-CAT_TYPE_ALLOTHER = 'allother'  # Category type
-REL_TYPE_ARITHMETIC_SEQUENCE = 'arithmetic_sequence'  # Relation type
-REL_TYPE_GEOMETRIC_SEQUENCE = 'geometric_sequence'
-REL_TYPE_EXPONENTIAL_SEQUENCE = 'exponential_sequence'
-REL_TYPE_LOGARITHMIC_SEQUENCE = 'logarithmic_sequence'
-REL_TYPE_UNKNOWN = 'unknown'
 
-REL_TYPE_LIST_TO_ONE_SUM = 'list_to_one_sum'
-REL_TYPE_LIST_TO_ONE_MAX = 'list_to_one_max'
-REL_TYPE_LIST_TO_ONE_MIN = 'list_to_one_min'
-REL_TYPE_LIST_TO_ONE_MEAN = 'list_to_one_mean'
-
-
-# Error codes
-ERROR_NOT_ARTHIMETIC_GEOMETRIC = "Sorry, I could not find any Arthimatic/Geometric relationship between Input & Output, Pls. check data!!!"
-
-ERROR_LIST = [ ERROR_NOT_ARTHIMETIC_GEOMETRIC, 1
-    ]
 # ------------------- Logging -------------------------
 #
 # -------------------  *****************  ------------------------
@@ -105,49 +90,49 @@ def find_relation_input_to_output(input, output):
 
     diff = [output[i] - input[i] for i in range(len(input))]
     if len(set(diff)) == 1:   # length will be 1 if all elements are same, because set() returns unique elements
-        REL_OBJ.update(REL_TYPE_ARITHMETIC_SEQUENCE, 'delta', diff[0], '+')
-        return REL_TYPE_ARITHMETIC_SEQUENCE
+        REL_OBJ.update(gc.REL_TYPE_ARITHMETIC_SEQUENCE, 'delta', diff[0], '+')
+        return gc.REL_TYPE_ARITHMETIC_SEQUENCE
 
     multiple = [output[i] / input[i] for i in range(len(input))]
     if len(set(multiple)) == 1:
-        REL_OBJ.update(REL_TYPE_GEOMETRIC_SEQUENCE, 'multiple', multiple[0], '*')
-        return REL_TYPE_GEOMETRIC_SEQUENCE
+        REL_OBJ.update(gc.REL_TYPE_GEOMETRIC_SEQUENCE, 'multiple', multiple[0], '*')
+        return gc.REL_TYPE_GEOMETRIC_SEQUENCE
 
     # if  round() for 3 places same for all elements, then it is integer number
     exponential = [round(math.log10(output[i]) / math.log10(input[i]), 3) for i in range(len(input))]
     log.debug(exponential)
     if len(set(exponential)) == 1:
         if exponential[0] > 1:
-            REL_OBJ.update(REL_TYPE_EXPONENTIAL_SEQUENCE, exponential[0])
-            return REL_TYPE_EXPONENTIAL_SEQUENCE
+            REL_OBJ.update(gc.REL_TYPE_EXPONENTIAL_SEQUENCE, exponential[0])
+            return gc.REL_TYPE_EXPONENTIAL_SEQUENCE
 
         else:
-            REL_OBJ.update(REL_TYPE_LOGARITHMIC_SEQUENCE, exponential[0])
-            return REL_TYPE_LOGARITHMIC_SEQUENCE
+            REL_OBJ.update(gc.REL_TYPE_LOGARITHMIC_SEQUENCE, exponential[0])
+            return gc.REL_TYPE_LOGARITHMIC_SEQUENCE
 
     # if not any one of above
-    return REL_TYPE_UNKNOWN
+    return gc.REL_TYPE_UNKNOWN
 
 # ------------------- find_relation_among_elements -------------------------
 def find_relation_among_elements(input):
 
     diff = [input[i+1] - input[i] for i in range(len(input) - 1)]
     if len(set(diff)) == 1:
-        return REL_TYPE_ARITHMETIC_SEQUENCE
+        return gc.REL_TYPE_ARITHMETIC_SEQUENCE
 
     multiple = [input[i+1] / input[i] for i in range(len(input) - 1)]
     if len(set(multiple)) == 1:
-        return REL_TYPE_GEOMETRIC_SEQUENCE
+        return gc.REL_TYPE_GEOMETRIC_SEQUENCE
 
     # if not any one of above
-    return REL_TYPE_UNKNOWN
+    return gc.REL_TYPE_UNKNOWN
 
 # ------------------- find_all_relationships -------------------------
 def find_all_relationships(categories):
 
     cat_realtionships = {}  # init
     for key, value in categories.items():
-        if key == CAT_TYPE_ALLOTHER:
+        if key == gc.CAT_TYPE_ALLOTHER:
             input_l, output_l = value
             cat_realtionships[key] = find_relation_input_to_output(input_l, output_l)
         else:
@@ -163,7 +148,7 @@ def find_all_relationships(categories):
 # -------------------  *****************  ------------------------
 def extract_categories(zip_inout, output_categories):
 
-    categories = { CAT_TYPE_ALLOTHER: ([], []) }  # dictionary to hold all distinct category items
+    categories = { gc.CAT_TYPE_ALLOTHER: ([], []) }  # dictionary to hold all distinct category items
     for x in output_categories:
         categories[x] = []
 
@@ -177,14 +162,14 @@ def extract_categories(zip_inout, output_categories):
             tmp.append(key)
             categories[value] = tmp
         else:
-            key_list, value_list = categories[CAT_TYPE_ALLOTHER]
+            key_list, value_list = categories[gc.CAT_TYPE_ALLOTHER]
             key_list.append(key)
             value_list.append(value)
-            categories[CAT_TYPE_ALLOTHER] = (key_list, value_list)
+            categories[gc.CAT_TYPE_ALLOTHER] = (key_list, value_list)
 
-    lst1, lst2 = categories[CAT_TYPE_ALLOTHER]
+    lst1, lst2 = categories[gc.CAT_TYPE_ALLOTHER]
     if len(lst1) == 0:
-        categories.pop(CAT_TYPE_ALLOTHER, None)  # since lists are empty remove key
+        categories.pop(gc.CAT_TYPE_ALLOTHER, None)  # since lists are empty remove key
 
     return categories
 
@@ -204,14 +189,14 @@ def gen_list_to_one_code():
     code = "{} = {}     # initialize variable \n".format(REL_OBJ.value1, REL_OBJ.value2) + \
            "for x in {}:\n\t".format(REL_OBJ.input_symbol)
 
-    if REL_OBJ.relationship_type in [REL_TYPE_LIST_TO_ONE_MAX, REL_TYPE_LIST_TO_ONE_MIN]:
+    if REL_OBJ.relationship_type in [gc.REL_TYPE_LIST_TO_ONE_MAX, gc.REL_TYPE_LIST_TO_ONE_MIN]:
         code = code + "if x {} {}: \n\t\t{} = x\n\n".format(REL_OBJ.value3, REL_OBJ.value1, REL_OBJ.value1)
     else:
         code = code + "{} = {} {} x\n\n".format(REL_OBJ.value1, REL_OBJ.value1, REL_OBJ.value3)
 
     value1mod = REL_OBJ.value1
-    if REL_OBJ.relationship_type == REL_TYPE_LIST_TO_ONE_MEAN:
-        code = code + "mean = {} / len({})\n".format(REL_OBJ.value1, REL_OBJ.input_symbol)
+    if REL_OBJ.relationship_type == gc.REL_TYPE_LIST_TO_ONE_MEAN:
+        code = code + "mean = {} / len({}):\n".format(REL_OBJ.value1, REL_OBJ.input_symbol)
         value1mod = "mean"
 
     code = code +"{} = {}     # assign final value to output variable \n".format(REL_OBJ.output_symbol, value1mod) + \
@@ -291,22 +276,22 @@ def generate_code(categories, cat_relationships):
     error_state = False
 
     if length == 1:
-        log.debug("  Input data relationship: {}\n:".format(cat_relationships[CAT_TYPE_ALLOTHER]))
-        relationship_type = cat_relationships[CAT_TYPE_ALLOTHER]
+        log.debug("  Input data relationship: {}\n:".format(cat_relationships[gc.CAT_TYPE_ALLOTHER]))
+        relationship_type = cat_relationships[gc.CAT_TYPE_ALLOTHER]
         log.debug('relationship_type: ' + REL_OBJ.relationship_type)
         log.debug('value1: ' + str(REL_OBJ.value1))
         log.debug('value2: ' + str(REL_OBJ.value2))
         log.debug('value3: ' + str(REL_OBJ.value3))
-        if relationship_type in [REL_TYPE_ARITHMETIC_SEQUENCE, REL_TYPE_GEOMETRIC_SEQUENCE]:
+        if relationship_type in [gc.REL_TYPE_ARITHMETIC_SEQUENCE, gc.REL_TYPE_GEOMETRIC_SEQUENCE]:
             code = get_loop_code()
-        elif relationship_type in [REL_TYPE_EXPONENTIAL_SEQUENCE, REL_TYPE_LOGARITHMIC_SEQUENCE]:
+        elif relationship_type in [gc.REL_TYPE_EXPONENTIAL_SEQUENCE, gc.REL_TYPE_LOGARITHMIC_SEQUENCE]:
             code = get_explog_code()
         else:
-            code = ERROR_NOT_ARTHIMETIC_GEOMETRIC
+            code = gc.ERROR_NOT_ARTHIMETIC_GEOMETRIC
 
         return code
 
-    elif REL_TYPE_UNKNOWN in cat_relationships.values():
+    elif gc.REL_TYPE_UNKNOWN in cat_relationships.values():
         log.debug("********** Unknown relationship in the Input data, let's find out")
 
         cat_lst = list(categories.items())
@@ -343,7 +328,7 @@ def generate_code(categories, cat_relationships):
     else:
         eachcat_with_onevalue = {}  # init
         for key, value in categories.items():
-            if key == CAT_TYPE_ALLOTHER:
+            if key == gc.CAT_TYPE_ALLOTHER:
                 input_l, output_l = value
                 delta = output_l[0] - input_l[0]
                 eachcat_with_onevalue[key] = delta
@@ -351,7 +336,7 @@ def generate_code(categories, cat_relationships):
                 eachcat_with_onevalue[key] = value[0]
 
 
-        delta = eachcat_with_onevalue.pop(CAT_TYPE_ALLOTHER, None) # save value and remove key
+        delta = eachcat_with_onevalue.pop(gc.CAT_TYPE_ALLOTHER, None) # save value and remove key
         log.debug(eachcat_with_onevalue)
 
         code = get_sequence_code(eachcat_with_onevalue, delta) # sequence  'child', 'teen' based on age
@@ -389,15 +374,15 @@ def handle_list_to_one(input, output):
     code = 'no code generated'
     init_value = "{}[0]".format(REL_OBJ.input_symbol)
     if sum(input) == output:
-        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_SUM, 'sum', 0, '+')
+        REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_SUM, 'sum', 0, '+')
     elif max(input) == output:
-        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MAX, 'max', init_value, '>')
+        REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MAX, 'max', init_value, '>')
     elif min(input) == output:
-        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MIN, 'min', init_value, '<')
+        REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MIN, 'min', init_value, '<')
     elif sum(input)/len(input) == output:
-        REL_OBJ.update(REL_TYPE_LIST_TO_ONE_MEAN, 'sum', 0, '+')
+        REL_OBJ.update(gc.REL_TYPE_LIST_TO_ONE_MEAN, 'sum', 0, '+')
 
-    if REL_OBJ.relationship_type in [REL_TYPE_LIST_TO_ONE_SUM, REL_TYPE_LIST_TO_ONE_MAX, REL_TYPE_LIST_TO_ONE_MIN, REL_TYPE_LIST_TO_ONE_MEAN]:
+    if REL_OBJ.relationship_type in [gc.REL_TYPE_LIST_TO_ONE_SUM, gc.REL_TYPE_LIST_TO_ONE_MAX, gc.REL_TYPE_LIST_TO_ONE_MIN, gc.REL_TYPE_LIST_TO_ONE_MEAN]:
         code = gen_list_to_one_code()
 
     return code
@@ -457,7 +442,7 @@ def process_for_relationships(input_l, output_l):
     output_categories = set(freq_two_or_more)  # removes duplicates
 
     if len(output_categories) == 0:
-        categories = {CAT_TYPE_ALLOTHER: (input_l, output_l)}  # dictionary to hold all distinct category items
+        categories = {gc.CAT_TYPE_ALLOTHER: (input_l, output_l)}  # dictionary to hold all distinct category items
     else:
         zip_inout = zip(input_l, output_l)
         categories = extract_categories(zip_inout, output_categories)
