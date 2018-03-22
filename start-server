@@ -3,4 +3,6 @@ virtualenv env
 
 pip install flask
 
+mkdir log
+
 python server*ddc* &
