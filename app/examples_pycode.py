@@ -101,3 +101,16 @@ date2 = '2018-04-18'
 # @input = date1 ; @output = date2
 """
 
+excode5_1 = """
+class Student(object):
+    pass
+
+st = Student()
+st.name = 'sri'
+
+
+inlst = [ st, st ]
+outlst = [ st, st ]
+# @input = inlst,name ; @output = outlst
+"""
+

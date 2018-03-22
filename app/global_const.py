@@ -27,14 +27,16 @@ ERROR_LIST = [ERROR_NOT_ARTHIMETIC_GEOMETRIC, 1 ]
 class Relationship_data(object):
     input_symbol = ''
     output_symbol = ''
+    input2_symbol = ''
     relationship_type = ''
     value1 = ''
     value2 = 0
     value3 = ''
 
-    def update_symbols(self, input_symbol, output_symbol):
+    def update_symbols(self, input_symbol, output_symbol, input2_symbol):
         self.input_symbol = input_symbol
         self.output_symbol = output_symbol
+        self.input2_symbol = input2_symbol
 
     def update(self, relationship_type, val1, val2=0, val3=''):
         self.relationship_type = relationship_type

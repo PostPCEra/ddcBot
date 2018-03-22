@@ -208,6 +208,12 @@ def parse_relationships_and_invoke_generate_code(categories, cat_relationships):
         return code
 
 
+def process_for_objects(input, output):
+    field_name = gc.REL_OBJ.input2_symbol
+    #code = gencode.gen_objects_code()
+    #return code
+
+
 def process_for_dates(dtstr1, dtstr2):
 
     formatstr = ''
@@ -233,6 +239,21 @@ def process_for_dates(dtstr1, dtstr2):
 # -------------------  *****************  ---------------------------
 
 def process_for_relationships(input_l, output_l):
+
+    if isinstance(input_l, list):
+        field_name = gc.REL_OBJ.input2_symbol
+        try:
+            #val = input_l[0].__getattribute__(field_name)
+            val = eval('input_l[0].' + field_name)
+            # code = process_for_objects(input_l, output_l)
+            gc.log.debug('val is:' + val)
+            return " yyyy it is object"
+
+        except Exception as e:
+            gc.log.debug('it is not class object, so proceed further')
+            pass
+
+
 
     if isinstance(input_l, str):
         code = process_for_dates(input_l, output_l)
@@ -265,12 +286,12 @@ def process_for_relationships(input_l, output_l):
     return code
 
 
-def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value):
+def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_value, input2_as_symbol):
     # need to state we are accessing Globally declared ones in this local method in order to modify them
     #global gc.REL_OBJ
 
     # update to global object, so we access these in code_gen() methods
-    gc.REL_OBJ.update_symbols(input_as_symbol, output_as_symbol)
+    gc.REL_OBJ.update_symbols(input_as_symbol, output_as_symbol, input2_as_symbol)
 
     #input_as_value = eval(input_as_symbol)  # not working for stand alone , so levae it
     input_as_value = in_as_value
@@ -279,6 +300,7 @@ def main_entry_point(input_as_symbol, output_as_symbol, in_as_value, out_as_valu
     gc.log.debug('\n------------- passed input/output values   ----------------')
     gc.log.debug(input_as_symbol)
     gc.log.debug(output_as_symbol)
+    gc.log.debug(input2_as_symbol)
     gc.log.debug(input_as_value)
     gc.log.debug(output_as_value)
 
