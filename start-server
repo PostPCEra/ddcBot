@@ -1,4 +1,6 @@
 virtualenv env
 . env/bin/activate
 
+pip install flask
+
 python server*ddc* &
