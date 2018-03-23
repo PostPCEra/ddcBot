@@ -13,6 +13,25 @@ def gen_dates_code(delta, formatstr):
 
     return code
 
+def gen_objects_code():
+    field = gc.REL_OBJ.input2_symbol
+
+    code = "import functools\n" + \
+        "def compare_objects(obj1, obj2):\n\t" + \
+                "if (obj1.{} > obj2.{}):\n\t\t".format(field, field) + \
+                    "ret = 1\n\t"  + \
+               "if (obj1.{} < obj2.{}):\n\t\t".format(field, field) + \
+                    "ret = -1\n\t" + \
+               "else:\n\t\t" + \
+                    "ret = 0\n\n\t" + \
+                "return ret\n\n"
+
+    code = code + "{} = sorted({}, key=functools.cmp_to_key(compare_objects))\n\n".format(gc.REL_OBJ.output_symbol, gc.REL_OBJ.input_symbol)
+    code = code + "for obj in {}:\n\t".format(gc.REL_OBJ.output_symbol)+ \
+                " print(obj.name, obj.age)\n"
+    return code
+
+
 def gen_list_to_one_code():
     code = "{} = {}     # initialize variable \n".format(gc.REL_OBJ.value1, gc.REL_OBJ.value2) + \
            "for x in {}:\n\t".format(gc.REL_OBJ.input_symbol)

@@ -103,14 +103,21 @@ date2 = '2018-04-18'
 
 excode5_1 = """
 class Student(object):
-    pass
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        
+    def print(self):
+        print(self.name, self.age)
 
-st = Student()
-st.name = 'sri'
+kids = []
+st = Student('Jack', 18)
+kids.append(st)
+st = Student('Anna', 19)
+kids.append(st)
+st = Student('Rose', 17)
+kids.append(st)
 
-
-inlst = [ st, st ]
-outlst = [ st, st ]
-# @input = inlst,name ; @output = outlst
+# @input = kids,name ; @output = kids
 """
 

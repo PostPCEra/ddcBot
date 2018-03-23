@@ -212,7 +212,7 @@ def process_for_objects(input, output):
     field_name = gc.REL_OBJ.input2_symbol
     #code = gencode.gen_objects_code()
     #return code
-
+    return 'code 2222'
 
 def process_for_dates(dtstr1, dtstr2):
 
@@ -243,11 +243,15 @@ def process_for_relationships(input_l, output_l):
     if isinstance(input_l, list):
         field_name = gc.REL_OBJ.input2_symbol
         try:
-            #val = input_l[0].__getattribute__(field_name)
+            gc.log.debug('input_l[0].' + field_name + '----')
+            gc.log.debug(input_l[0].name)
+            gc.log.debug(input_l[0].age)
             val = eval('input_l[0].' + field_name)
-            # code = process_for_objects(input_l, output_l)
-            gc.log.debug('val is:' + val)
-            return " yyyy it is object"
+            gc.log.debug('value of the field is:' + val)
+            code = gencode.gen_objects_code()
+            #code2 = process_for_objects(input_l, output_l)
+            #return 'code'
+            return code
 
         except Exception as e:
             gc.log.debug('it is not class object, so proceed further')
