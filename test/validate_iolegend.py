@@ -1,9 +1,11 @@
 
+# -------------------------------------------------------------------------------------------------------
 # pytest tutorial : http://pythontesting.net/framework/pytest/pytest-introduction/
 
 # How to run tests :
 # be in test dir
-# py.test -v  <test-file.py>  or  py
+# $py.test -v  <test-file.py>  or  $python -m pytest -v  <test-file.py>
+# ---------------------------------------------------------------------------------------------------------
 import sys
 sys.path.append('../')
 
