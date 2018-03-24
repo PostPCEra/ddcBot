@@ -1,5 +1,6 @@
 
-from app import global_const
+from app import global_const as gc
+from app import application_errors as aerr
 
 # ------------------------ extract_input_output_names ----------------------------------------------
 #
@@ -43,11 +44,11 @@ def extract_input_output_names(code):
     except Exception as e:
         type = e.__class__.__name__
         if type == 'MyNoInputException':
-            error = "Error:***************------ @input @output Meta tags are missing ..... "
+            error = aerr.msg('E_IOL1_MISSING_WORDS')
         elif type == 'ValueError':
-            error = "Error:***************------The separator ; is missing in the input output legend"
+            error = aerr.msg('E_IOL2_SEPCHAR')
         else:
-            error = 'Error:***************------ some other different exception occured '
+            error = aerr.msg('E_IOL0_UNKONWN')
         #print(type)
         #print_exc()
 
