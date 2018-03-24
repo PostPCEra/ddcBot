@@ -23,6 +23,7 @@ $pip install virtualenv
 $ virtualenv env
 $ . env/bin/activate
 $ pip install Flask
+$ pip install pytest
 ```
 Additional Installs required
 Magnific-Popup : Light and responsive [lightbox script with focus on performance.](https://github.com/dimsemenov/Magnific-Popup)
