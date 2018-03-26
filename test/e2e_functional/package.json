@@ -1,0 +1,21 @@
+{
+  "name": "ddc-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "nightwatch": "^0.9.20"
+  },
+  "devDependencies": {
+    "chromedriver": "^2.37.0",
+    "geckodriver": "^1.11.0",
+    "selenium-server": "^3.11.0"
+  },
+  "scripts": {
+    "nightwatch": "nightwatch -c nightwatch.conf.js -e chrome"
+  },
+  "keywords": [],
+  "author": "",
+  "comment": "nightwatch -c tests/nightwatch.conf.js -e chrome,firefox,safari",
+  "license": "ISC"
+}
