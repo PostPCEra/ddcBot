@@ -1,20 +1,19 @@
 
-#### Steps for running Nightwatch along with Selenium server for EndtoEnd Browser Testing
+#### 1. Steps for running Nightwatch along with Selenium server for E2E (EndtoEnd) Funcitonal Browser Testing
 ```
 $ java -version   # check to makesure JAVA is installed on the machine
 $ brew install node  # if node is not installed install it
 
-# this will install all node modules specified in package.json file (in our case chromedriver, selenium, )and it's dependencies
-# in the current directory where the below command ran
+# this will install all node modules specified in package.json file (in our case chromedriver, selenium, )
+# and it's dependencies in the current directory where the below command ran
 $ npm install     
-
 
 # this will run the task named 'nightwatch' under scripts in package.json file, task name can be any name
 $ npm run nightwatch   
 ```
 
 ______________________________________________________________________________________________________________________
-#### Best articls on Testing from internet 
+#### 2. Best articls on Testing from internet 
 
 1. An Overview of [JavaScript Testing in 2018](https://medium.com/welldone-software/an-overview-of-javascript-testing-in-2018-f68950900bc3)
 + as per Author (highlighted on page) : TL;DR; Use Jest for unit & integration tests, TestCafe for UI tests
