@@ -12,6 +12,7 @@ $ npm install
 $ npm run nightwatch   
 ```
 
+See below Nightwatch Page Objects & Commonds, that is where real fun of Nightwatch is (see file1, file2 )
 ______________________________________________________________________________________________________________________
 #### 2. Best articls on Testing from internet 
 
