@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 
+# Projet specific -- Bot generated file
+app/_mainentrypoint.py
+test/.pytest_cache
+app-react-jest/node_modules
+
 # C extensions
 *.so
 
