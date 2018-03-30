@@ -14,12 +14,15 @@ $ npm start  will open a web page http://localhost:3000/ ,  source code is in /s
  + [from jest site](https://facebook.github.io/jest/docs/en/getting-started.html)
  + $ node install jest --save-dev
  + As mentioned on the web page add  sum.js  & sum.test.js files
- + Add the following section to your package.json: ( replace whatever you had under "scripts" )
- + run $ npm test
+ + Add "test" section to your package.json: 
+ + run $ npm test , this will run basic JEST tests, **this is a core basic of Jest. you don't need babel etc.. to run simple JS tests.**
 ```
 {
   "scripts": {
-    "test": "jest"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest",
+    "eject": "react-scripts eject"
   }
 }
 ```
@@ -32,9 +35,8 @@ $ npm start  will open a web page http://localhost:3000/ ,  source code is in /s
   + setup.js — to setup enzyme to use React 16.
   + shim.js — to get rid of warnings regarding missing browser polyfills.
   + create both these files under a dir 'config' ( can be any name)
-
-
-https://stackoverflow.com/questions/47781736/jest-cannot-find-module-setupdevtools-from-setup-js
+  + install pkg shown below, create .babelrc 
+  + update package.json [as suggested in this so](https://stackoverflow.com/questions/47781736/jest-cannot-find-module-setupdevtools-from-setup-js)
 
 ```
 npm install --save-dev babel-jest
@@ -66,7 +68,7 @@ create  .babelrc file as follws
 
 ### 5. Here is Working final package.json ,
   + have file like this , and issue command $ npm install , so it will update all dependencies
-  + /src/Foo.js /src/__tests__/Foo.test.js  files are created
+  + we need to create some test files: /src/Foo.js /src/__tests__/Foo.test.js  files are created
   + $npm test
   + $ npm test -- --watch    // this will watch dir and run in auto mode when files changes 
 
