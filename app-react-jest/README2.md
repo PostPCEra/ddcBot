@@ -88,7 +88,10 @@ create  .babelrc file as follws
     "react-test-renderer": "^16.3.0"
   },
   "scripts": {
-    "test": "jest"
+   "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest",
+    "eject": "react-scripts eject"
   },
   "jest": {
     "setupFiles": [
